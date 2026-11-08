@@ -1,0 +1,29 @@
+famille,donnee,chemin,attendu,present,etat
+marche_finance,Marches Yahoo,t1_marches,19,19,complet
+marche_finance,Prix Banque mondiale,data/raw/t1_marches/controle/worldbank_CMO_monthly.xlsx,1,1,complet
+climat,NASA POWER 7 variables,t2_climat/power,349,349,complet
+climat,NASA rayonnement et vent,t2_climat/power_complement,349,349,complet
+climat,ERA5 pluie,t2_climat/era5,349,349,complet
+climat,ERA5 controle,t2_climat/era5_controle,14,14,complet
+climat,CHIRPS points,t2_climat/chirps,349,349,complet
+climat,ENSO ONI,data/raw/t2_climat/oni.txt,1,1,complet
+climat,GEFS pluie,t2_climat/gefs,7980,7981,complet
+climat,GEFS temperature maximale,t2_climat/gefs_tmax,7980,7981,complet
+climat,Indices GEFS corriges,data/processed/gefs_pays.parquet,1,1,complet
+biodiversite,Incendies FIRMS 2005-2025,t2_climat/firms,189,189,complet
+biodiversite,Incendies FIRMS 2026,t2_climat/firms,9,0,incomplet
+biodiversite,Pesticides FAOSTAT,data/raw/t3_offre/faostat_pesticides.csv,1,1,complet
+biodiversite,Azote FAOSTAT,data/raw/t3_offre/faostat_engrais.csv,1,1,complet
+production_offre,FAOSTAT cacao,data/raw/t3_offre/faostat_cacao.csv,1,1,complet
+production_offre,ICCO editions (sensibilite),data/interim/icco_production_editions.csv,1,1,complet
+investisseurs_biais,CFTC historique,data/raw/t4_investisseurs/cftc_legacy.csv,1,1,complet
+investisseurs_biais,CFTC desagrege,data/raw/t4_investisseurs/cftc_desagrege.csv,1,1,complet
+investisseurs_biais,Google Trends,data/raw/t4_investisseurs/google_trends_mensuel.csv,1,1,complet
+investisseurs_biais,GDELT presse cacao,t5_geopolitique,4,4,complet
+geopolitique,GPR quotidien,data/raw/t5_geopolitique/gpr_quotidien.xls,1,1,complet
+geopolitique,GPR mensuel,data/raw/t5_geopolitique/gpr_mensuel.xls,1,1,complet
+geopolitique,GDELT evenements,t5_geopolitique/gdelt_evenements,5000,5032,complet
+geopolitique,Base d'evenements,config/evenements.csv,1,1,complet
+reference,Points meteo,data/interim/points_meteo_retenus.parquet,1,1,complet
+reference,Poids FAOSTAT,outputs/metriques/t2_poids_pays.csv,1,1,complet
+traite,Dataset quotidien,data/processed/dataset_quotidien.parquet,1,1,complet

@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Résultats : le modèle face au benchmark – Cacao : quels facteurs pèsent sur le prix ?</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-172ba59bd5e0b52282274ba0c0cc16fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+<script>
+
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+
+if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+
+</script>
+
+<script type="module">import "https://cdn.plot.ly/plotly-4.1.1.min"</script>
+
+
+
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Cacao : quels facteurs pèsent sur le prix ?</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Recherche"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Accueil</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./marche.html"> 
+<span class="menu-text">Marché du jour</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./donnees.html"> 
+<span class="menu-text">Données</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./resultats.html" aria-current="page"> 
+<span class="menu-text">Résultats</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./familles.html"> 
+<span class="menu-text">Familles de facteurs</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./exploratoire.html"> 
+<span class="menu-text">Pistes exploratoires</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./impact.html"> 
+<span class="menu-text">Météo et production</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./methode.html"> 
+<span class="menu-text">Méthode et limites</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul>
+  <li><a href="#en-bref" id="toc-en-bref" class="nav-link active" data-scroll-target="#en-bref">En bref</a></li>
+  <li><a href="#lecture-des-graphiques" id="toc-lecture-des-graphiques" class="nav-link" data-scroll-target="#lecture-des-graphiques">Lecture des graphiques</a></li>
+  <li><a href="#sens-du-prix" id="toc-sens-du-prix" class="nav-link" data-scroll-target="#sens-du-prix">Sens du prix</a>
+  <ul class="collapse">
+  <li><a href="#année-par-année-à-20-séances" id="toc-année-par-année-à-20-séances" class="nav-link" data-scroll-target="#année-par-année-à-20-séances">Année par année, à 20 séances</a></li>
+  </ul></li>
+  <li><a href="#volatilité" id="toc-volatilité" class="nav-link" data-scroll-target="#volatilité">Volatilité</a>
+  <ul class="collapse">
+  <li><a href="#tous-les-scores" id="toc-tous-les-scores" class="nav-link" data-scroll-target="#tous-les-scores">Tous les scores</a></li>
+  </ul></li>
+  <li><a href="#tests-de-robustesse" id="toc-tests-de-robustesse" class="nav-link" data-scroll-target="#tests-de-robustesse">Tests de robustesse</a></li>
+  <li><a href="#et-en-prévoyant-directement-le-rendement" id="toc-et-en-prévoyant-directement-le-rendement" class="nav-link" data-scroll-target="#et-en-prévoyant-directement-le-rendement">Et en prévoyant directement le rendement ?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Résultats : le modèle face au benchmark</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="419234c9" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> balanced_accuracy_score</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _commun <span class="im">import</span> DATASET, METRIQUES, SERIE, MUET, lire, tableau</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> lire(<span class="st">"modele_horizons.csv"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>HORIZONS <span class="op">=</span> {<span class="st">"sens"</span>: [<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">60</span>, <span class="dv">120</span>], <span class="st">"vol"</span>: [<span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">60</span>, <span class="dv">120</span>]}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> points_ic(t, series, titre, axe_y):</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Ecart au benchmark et intervalle a 99,4 %, un point par horizon et par serie."""</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> go.Figure()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(series)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, (nom, (filtre, couleur)) <span class="kw">in</span> <span class="bu">enumerate</span>(series.items()):</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> t[filtre]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        pos <span class="op">=</span> [HORIZONS_POS[h] <span class="op">+</span> (k <span class="op">-</span> (n <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> <span class="fl">0.18</span> <span class="cf">for</span> h <span class="kw">in</span> x[<span class="st">"horizon"</span>]]</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        fig.add_scatter(x<span class="op">=</span>pos, y<span class="op">=</span>x[<span class="st">"ecart"</span>], mode<span class="op">=</span><span class="st">"markers"</span>, name<span class="op">=</span>nom,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                        marker<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">10</span>, color<span class="op">=</span>couleur, line<span class="op">=</span><span class="bu">dict</span>(width<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span><span class="st">"white"</span>)),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                        error_y<span class="op">=</span><span class="bu">dict</span>(<span class="bu">type</span><span class="op">=</span><span class="st">"data"</span>, symmetric<span class="op">=</span><span class="va">False</span>, array<span class="op">=</span>x[<span class="st">"ic_haut"</span>] <span class="op">-</span> x[<span class="st">"ecart"</span>],</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                                     arrayminus<span class="op">=</span>x[<span class="st">"ecart"</span>] <span class="op">-</span> x[<span class="st">"ic_bas"</span>], color<span class="op">=</span>couleur, thickness<span class="op">=</span><span class="dv">2</span>, width<span class="op">=</span><span class="dv">4</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                        customdata<span class="op">=</span>np.stack([x[<span class="st">"horizon"</span>], x[<span class="st">"ic_bas"</span>], x[<span class="st">"ic_haut"</span>]], axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                        hovertemplate<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>nom<span class="sc">}</span><span class="ss">&lt;br&gt;Horizon %</span><span class="ch">{{</span><span class="ss">customdata[0]</span><span class="ch">}}</span><span class="ss"> séances&lt;br&gt;Écart %</span><span class="ch">{{</span><span class="ss">y:+.3f</span><span class="ch">}}</span><span class="ss">"</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"&lt;br&gt;IC 99,4 % : %</span><span class="sc">{customdata[1]:+.3f}</span><span class="st"> à %</span><span class="sc">{customdata[2]:+.3f}</span><span class="st">&lt;extra&gt;&lt;/extra&gt;"</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    fig.add_hline(y<span class="op">=</span><span class="dv">0</span>, line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span>MUET, width<span class="op">=</span><span class="fl">1.5</span>, dash<span class="op">=</span><span class="st">"dot"</span>))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    fig.update_layout(title<span class="op">=</span>titre, height<span class="op">=</span><span class="dv">400</span>, yaxis_title<span class="op">=</span>axe_y,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>                      xaxis<span class="op">=</span><span class="bu">dict</span>(tickvals<span class="op">=</span><span class="bu">list</span>(HORIZONS_POS.values()), ticktext<span class="op">=</span>[<span class="ss">f"</span><span class="sc">{</span>h<span class="sc">}</span><span class="ss"> séances"</span> <span class="cf">for</span> h <span class="kw">in</span> HORIZONS_POS]))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="en-bref" class="level2">
+<h2 class="anchored" data-anchor-id="en-bref">En bref</h2>
+<p>On a entraîné un modèle de machine learning à prévoir le cacao à partir des 8 familles de facteurs. On l’a comparé à des modèles simples <strong>sans aucun facteur</strong>, qui ne regardent que le prix passé. Si les facteurs apportaient de l’information, le modèle devrait battre ces modèles simples. <strong>Ce n’est le cas pour aucun horizon.</strong></p>
+<p>Quelques termes :</p>
+<ul>
+<li><strong>Sens du prix :</strong> le cours sera-t-il plus haut ou plus bas dans 1, 5, 20, 60 ou 120 séances ? Une séance est un jour de cotation : 20 séances font environ un mois, 120 environ six mois.</li>
+<li><strong>Exactitude équilibrée :</strong> la part de bonnes prévisions, corrigée pour que hausses et baisses pèsent autant. <strong>0,5 correspond au hasard</strong>, comme à pile ou face.</li>
+<li><strong>Volatilité :</strong> l’ampleur des variations du cours, qu’elles soient à la hausse ou à la baisse. Elle est mesurée par la <strong>RMSE</strong>, l’erreur moyenne de prévision : plus elle est basse, mieux c’est.</li>
+<li><strong>Benchmark :</strong> le meilleur modèle sans facteurs, par exemple « la tendance récente continue » ou « l’agitation récente persiste ».</li>
+<li><strong>Hors échantillon :</strong> chaque année est prévue avec un modèle entraîné uniquement sur les années précédentes, comme en conditions réelles.</li>
+</ul>
+</section>
+<section id="lecture-des-graphiques" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-des-graphiques">Lecture des graphiques</h2>
+<p>Chaque point est l’<strong>écart entre le modèle à facteurs et le meilleur modèle sans facteurs</strong> sur 2010-2026. La barre est l’intervalle de confiance à 99,4 %, calculé par bootstrap par blocs. Ce niveau corrige les 9 comparaisons (5 % divisé par 9).</p>
+<ul>
+<li><strong>Au-dessus de zéro</strong>, le modèle à facteurs fait mieux.</li>
+<li>Il ne <strong>bat</strong> le benchmark que si toute la barre est au-dessus de zéro, dans les deux lectures.</li>
+</ul>
+</section>
+<section id="sens-du-prix" class="level2">
+<h2 class="anchored" data-anchor-id="sens-du-prix">Sens du prix</h2>
+<div id="a4007128" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>HORIZONS_POS <span class="op">=</span> {h: i <span class="cf">for</span> i, h <span class="kw">in</span> <span class="bu">enumerate</span>(HORIZONS[<span class="st">"sens"</span>])}</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> c[(c[<span class="st">"cible"</span>] <span class="op">==</span> <span class="st">"sens"</span>) <span class="op">&amp;</span> (c[<span class="st">"modele"</span>] <span class="op">==</span> <span class="st">"gradient_boosting"</span>)]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>points_ic(t, {<span class="st">"Lecture brute"</span>: (t[<span class="st">"lecture"</span>] <span class="op">==</span> <span class="st">"brute"</span>, SERIE[<span class="dv">0</span>]),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Lecture de contrôle"</span>: (t[<span class="st">"lecture"</span>] <span class="op">!=</span> <span class="st">"brute"</span>, SERIE[<span class="dv">1</span>])},</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>          <span class="st">"Sens du prix : écart d'exactitude équilibrée au benchmark"</span>, <span class="st">"Écart (points d'exactitude)"</span>).show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div style="height:400px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="73515c51-82db-4d90-9ffb-1cf81916ca8f" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("73515c51-82db-4d90-9ffb-1cf81916ca8f")) {                    Plotly.newPlot(                        "73515c51-82db-4d90-9ffb-1cf81916ca8f",                        [{"customdata":{"dtype":"f8","bdata":"AAAAAAAA8D9vY4cX3E6lv836ghn9iZk\u002fAAAAAAAAFEDEK94Hs8OgvztifUJpEaM\u002fAAAAAAAANEAFfW5nUJK3vzOsB0Yy0I0\u002fAAAAAAAATkAqh9eMO2jCv\u002fuo3MptEYU\u002fAAAAAAAAXkBJcOJQR5vFv93MBfNcLrI\u002f","shape":"5, 3"},"error_y":{"array":{"dtype":"f8","bdata":"Jm+TpfiYoT8rzN0xwXyjP026VVMBrqg\u002f\u002fz71pewAtT9oI6m4OIjAPw=="},"arrayminus":{"dtype":"f8","bdata":"r3G1\u002fuF6oD\u002fUwX0YW1igP8oqCQ2s6q0\u002fdGQVLbhxsj+eZngjelS8Pw=="},"color":"#2a78d6","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Lecture brute\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2a78d6","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Lecture brute","x":[-0.09,0.91,1.91,2.91,3.91],"y":{"dtype":"f8","bdata":"AMdHY+hPg78AfBrY+9VKv0DP08H0OaG\u002f4KmZ7L5esr\u002fo85j8KMStvw=="},"type":"scatter"},{"customdata":{"dtype":"f8","bdata":"AAAAAAAA8D86ZcbtYV+lvwJ\u002fM5Ucd5U\u002fAAAAAAAAFEC73L7eoJWiv70eZi2smKA\u002fAAAAAAAANEBG40yC2BzCvzfPsvIRrrI\u002fAAAAAAAATkDJCCYd5LzFvwQIYH1M84Q\u002fAAAAAAAAXkBtkxqdq+PRv1N6wS+FAqc\u002f","shape":"5, 3"},"error_y":{"array":{"dtype":"f8","bdata":"aZHgRtoDoD\u002fVLehlbDKiP7tZT7Kml7w\u002fICBuCKyhtz9Pd90OmZPEPw=="},"arrayminus":{"dtype":"f8","bdata":"UpN\u002f8RUXoD+jzTym4PugPwg8\u002fUQcULo\u002fcvKJwYV2tj8gDkh3X\u002fTEPw=="},"color":"#eb6834","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Lecture de contr\u00f4le\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#eb6834","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Lecture de contr\u00f4le","x":[0.09,1.09,2.09,3.09,4.09],"y":{"dtype":"f8","bdata":"oEcb8S8hhb+A8SCIA5xpvwgVOX8p06O\u002fIB\u002fCeEIDtb90MdqF76W9vw=="},"type":"scatter"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"shapes":[{"line":{"color":"#898781","dash":"dot","width":1.5},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0,"y1":0,"yref":"y"}],"xaxis":{"tickvals":[0,1,2,3,4],"ticktext":["1 s\u00e9ances","5 s\u00e9ances","20 s\u00e9ances","60 s\u00e9ances","120 s\u00e9ances"]},"title":{"text":"Sens du prix : \u00e9cart d'exactitude \u00e9quilibr\u00e9e au benchmark"},"height":400,"yaxis":{"title":{"text":"\u00c9cart (points d'exactitude)"}}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('73515c51-82db-4d90-9ffb-1cf81916ca8f');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<p>Aucun intervalle n’est entièrement au-dessus de zéro. Jusqu’à 5 séances, le modèle est au niveau du hasard, comme le benchmark. À 60 et 120 séances, il fait <strong>moins bien que le hasard</strong>. Il apprend des régimes passés qui ne se répètent pas.</p>
+<section id="année-par-année-à-20-séances" class="level3">
+<h3 class="anchored" data-anchor-id="année-par-année-à-20-séances">Année par année, à 20 séances</h3>
+<div id="3034c1e6" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> pd.read_parquet(METRIQUES <span class="op">/</span> <span class="st">"modele_predictions.parquet"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> pd.read_parquet(DATASET, columns<span class="op">=</span>[<span class="st">"cible_hausse_20"</span>])[<span class="st">"cible_hausse_20"</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lignes <span class="op">=</span> []</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nom, col <span class="kw">in</span> ((<span class="st">"Modèle à facteurs"</span>, <span class="st">"sens_20_brute_gradient_boosting"</span>), (<span class="st">"Meilleur sans facteurs"</span>, <span class="st">"sens_20_brute_benchmark"</span>)):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> p[col].reindex(y.index)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> a <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2010</span>, <span class="dv">2027</span>):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        i <span class="op">=</span> (y.index.year <span class="op">==</span> a) <span class="op">&amp;</span> y.notna() <span class="op">&amp;</span> s.notna()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i.<span class="bu">sum</span>() <span class="op">&gt;</span> <span class="dv">20</span> <span class="kw">and</span> y[i].nunique() <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            lignes.append({<span class="st">"annee"</span>: a, <span class="st">"serie"</span>: nom, <span class="st">"score"</span>: balanced_accuracy_score(y[i].astype(<span class="bu">int</span>), (s[i] <span class="op">&gt;</span> <span class="fl">0.5</span>).astype(<span class="bu">int</span>))})</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> pd.DataFrame(lignes)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> go.Figure()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, nom <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">"Modèle à facteurs"</span>, <span class="st">"Meilleur sans facteurs"</span>]):</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> a[a[<span class="st">"serie"</span>] <span class="op">==</span> nom]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    fig.add_scatter(x<span class="op">=</span>x[<span class="st">"annee"</span>], y<span class="op">=</span>x[<span class="st">"score"</span>], mode<span class="op">=</span><span class="st">"lines+markers"</span>, name<span class="op">=</span>nom, line<span class="op">=</span><span class="bu">dict</span>(width<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span>SERIE[k]),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                    marker<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="dv">8</span>), hovertemplate<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>nom<span class="sc">}</span><span class="ss">&lt;br&gt;%</span><span class="ch">{{</span><span class="ss">x</span><span class="ch">}}</span><span class="ss"> : %</span><span class="ch">{{</span><span class="ss">y:.3f</span><span class="ch">}}</span><span class="ss">&lt;extra&gt;&lt;/extra&gt;"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>fig.add_hline(y<span class="op">=</span><span class="fl">0.5</span>, line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span>MUET, width<span class="op">=</span><span class="fl">1.5</span>, dash<span class="op">=</span><span class="st">"dot"</span>))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>fig.add_vrect(x0<span class="op">=</span><span class="fl">2023.5</span>, x1<span class="op">=</span><span class="fl">2026.5</span>, fillcolor<span class="op">=</span>SERIE[<span class="dv">1</span>], opacity<span class="op">=</span><span class="fl">0.07</span>, line_width<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>              annotation_text<span class="op">=</span><span class="st">"Crise 2024-2026"</span>, annotation_position<span class="op">=</span><span class="st">"top left"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>fig.update_layout(title<span class="op">=</span><span class="st">"Sens à 20 séances : exactitude équilibrée par année de test"</span>, height<span class="op">=</span><span class="dv">380</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                  yaxis_title<span class="op">=</span><span class="st">"Exactitude équilibrée"</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div style="height:380px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="9a101bd6-da2d-4fc8-8dab-280a206c7ffe" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("9a101bd6-da2d-4fc8-8dab-280a206c7ffe")) {                    Plotly.newPlot(                        "9a101bd6-da2d-4fc8-8dab-280a206c7ffe",                        [{"hovertemplate":"Mod\u00e8le \u00e0 facteurs\u003cbr\u003e%{x} : %{y:.3f}\u003cextra\u003e\u003c\u002fextra\u003e","line":{"color":"#2a78d6","width":2},"marker":{"size":8},"mode":"lines+markers","name":"Mod\u00e8le \u00e0 facteurs","x":{"dtype":"i2","bdata":"2gfbB9wH3QfeB98H4AfhB+IH4wfkB+UH5gfnB+gH6QfqBw=="},"y":{"dtype":"f8","bdata":"KNfH0oFy3T\u002f0Zx3\u002fmojhP\u002fia0NsfSOM\u002f5hlJ36XA2D+Y5eKB3b\u002fmP4r8HkeV9+E\u002fQrFBlaQn3D\u002fTum\u002fxP1vjP3ovsvm\u002fZeE\u002f2kECEjEY4z956SYxCIzgP+q5Pn6Rj9w\u002fMcYza8aS4z9fEDDaljviP9NqO5rcV+E\u002fijp8kbqH4D9iv1qDXBLcPw=="},"type":"scatter"},{"hovertemplate":"Meilleur sans facteurs\u003cbr\u003e%{x} : %{y:.3f}\u003cextra\u003e\u003c\u002fextra\u003e","line":{"color":"#eb6834","width":2},"marker":{"size":8},"mode":"lines+markers","name":"Meilleur sans facteurs","x":{"dtype":"i2","bdata":"2gfbB9wH3QfeB98H4AfhB+IH4wfkB+UH5gfnB+gH6QfqBw=="},"y":{"dtype":"f8","bdata":"pxg1\u002fG2K4T\u002fQNDUpl33hPzYBvr61VuE\u002f9K3jpVVW3j+2veDNJqjgP9ZWYGUDbeE\u002fNp50dEl\u002f4T+pvh0PJYTlP3zKJV3fGeQ\u002f0Bky4ypW5D86tMh2vn\u002fhP0diLJjAb+E\u002f6YT6F\u002feG4T8+sQuQCf7lP3VrflikDOQ\u002f2vZYqTSA4D+ewe3kGdzePw=="},"type":"scatter"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"shapes":[{"line":{"color":"#898781","dash":"dot","width":1.5},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0.5,"y1":0.5,"yref":"y"},{"fillcolor":"#eb6834","line":{"width":0},"opacity":0.07,"type":"rect","x0":2023.5,"x1":2026.5,"xref":"x","y0":0,"y1":1,"yref":"y domain"}],"annotations":[{"showarrow":false,"text":"Crise 2024-2026","x":2023.5,"xanchor":"left","xref":"x","y":1,"yanchor":"top","yref":"y domain"}],"title":{"text":"Sens \u00e0 20 s\u00e9ances : exactitude \u00e9quilibr\u00e9e par ann\u00e9e de test"},"height":380,"yaxis":{"title":{"text":"Exactitude \u00e9quilibr\u00e9e"}}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('9a101bd6-da2d-4fc8-8dab-280a206c7ffe');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+</section>
+</section>
+<section id="volatilité" class="level2">
+<h2 class="anchored" data-anchor-id="volatilité">Volatilité</h2>
+<div id="f4be7382" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>HORIZONS_POS <span class="op">=</span> {h: i <span class="cf">for</span> i, h <span class="kw">in</span> <span class="bu">enumerate</span>(HORIZONS[<span class="st">"vol"</span>])}</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> c[(c[<span class="st">"cible"</span>] <span class="op">==</span> <span class="st">"vol"</span>) <span class="op">&amp;</span> (c[<span class="st">"modele"</span>] <span class="op">==</span> <span class="st">"gradient_boosting"</span>)]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>points_ic(t, {<span class="st">"Lecture brute"</span>: (t[<span class="st">"lecture"</span>] <span class="op">==</span> <span class="st">"brute"</span>, SERIE[<span class="dv">0</span>]),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Lecture de contrôle"</span>: (t[<span class="st">"lecture"</span>] <span class="op">!=</span> <span class="st">"brute"</span>, SERIE[<span class="dv">1</span>])},</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>          <span class="st">"Volatilité : écart de RMSE au benchmark (positif = modèle meilleur)"</span>, <span class="st">"Écart de RMSE"</span>).show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div style="height:400px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="77183f2f-cbd5-4d63-9ab3-e2d6ee73a33f" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("77183f2f-cbd5-4d63-9ab3-e2d6ee73a33f")) {                    Plotly.newPlot(                        "77183f2f-cbd5-4d63-9ab3-e2d6ee73a33f",                        [{"customdata":{"dtype":"f8","bdata":"AAAAAAAAFECZU1I4GLaAv+21LwWVGIo\u002fAAAAAAAANEBm9h5lNXGpvzqnC437+1s\u002fAAAAAAAATkDAwgf9Hnezv62Qc\u002fFAwYm\u002fAAAAAAAAXkCITKQmcI+0v4MUP\u002f4tMXW\u002f","shape":"4, 3"},"error_y":{"array":{"dtype":"f8","bdata":"TeRs1dRRhj9AvnfZLnCePyVrAViPEqE\u002fgDSltsWzoj8="},"arrayminus":{"dtype":"f8","bdata":"OSUVaNh8hD8A6Zap+zGWP2BsYsu81p4\u002fAILb1vTEoz8="},"color":"#2a78d6","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Lecture brute\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2a78d6","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Lecture brute","x":[-0.09,0.91,1.91,2.91],"y":{"dtype":"f8","bdata":"AI0WfgE2Xj\u002fMA6cgb7Ccv1BPXpTfgqe\u002fEBdtdutZpb8="},"type":"scatter"},{"customdata":{"dtype":"f8","bdata":"AAAAAAAAFECQ7LdrtxWHv+KwjOF7woU\u002fAAAAAAAANEBqy1jaLvafv8d2UiA6RJU\u002f","shape":"2, 3"},"error_y":{"array":{"dtype":"f8","bdata":"MswbTPMBhz+jsaqC1WudPw=="},"arrayminus":{"dtype":"f8","bdata":"QNEoAUDWhT+OkAB4k86XPw=="},"color":"#eb6834","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Lecture de contr\u00f4le\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#eb6834","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Lecture de contr\u00f4le","x":[0.09,1.09],"y":{"dtype":"f8","bdata":"ALXxqHb3Q7+4dbDENk+Avw=="},"type":"scatter"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"shapes":[{"line":{"color":"#898781","dash":"dot","width":1.5},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0,"y1":0,"yref":"y"}],"xaxis":{"tickvals":[0,1,2,3],"ticktext":["5 s\u00e9ances","20 s\u00e9ances","60 s\u00e9ances","120 s\u00e9ances"]},"title":{"text":"Volatilit\u00e9 : \u00e9cart de RMSE au benchmark (positif = mod\u00e8le meilleur)"},"height":400,"yaxis":{"title":{"text":"\u00c9cart de RMSE"}}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('77183f2f-cbd5-4d63-9ab3-e2d6ee73a33f');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<p>Pour la volatilité, le benchmark est la volatilité récente (persistance) ou sa moyenne passée. À 60 et 120 séances, le modèle à facteurs fait <strong>significativement moins bien</strong> : toute la barre est sous zéro. Le protocole ne définit pas de lecture de contrôle pour ces deux horizons.</p>
+<section id="tous-les-scores" class="level3">
+<h3 class="anchored" data-anchor-id="tous-les-scores">Tous les scores</h3>
+<div id="edc15053" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> c.copy()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sens <span class="op">=</span> t[<span class="st">"cible"</span>] <span class="op">==</span> <span class="st">"sens"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> [<span class="st">"score_2010-2026"</span>, <span class="st">"benchmark_2010-2026"</span>, <span class="st">"score_2010-2023"</span>, <span class="st">"benchmark_2010-2023"</span>, <span class="st">"score_2024-2026"</span>, <span class="st">"benchmark_2024-2026"</span>]:</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    t[col] <span class="op">=</span> t[col].where(sens, <span class="op">-</span>t[col])</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>t[<span class="st">"modele"</span>] <span class="op">=</span> t[<span class="st">"modele"</span>].<span class="bu">map</span>({<span class="st">"gradient_boosting"</span>: <span class="st">"Gradient Boosting"</span>, <span class="st">"random_forest"</span>: <span class="st">"Random Forest (contrôle)"</span>})</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>tableau(t[[<span class="st">"cible"</span>, <span class="st">"horizon"</span>, <span class="st">"lecture"</span>, <span class="st">"modele"</span>, <span class="st">"benchmark"</span>, <span class="st">"score_2010-2026"</span>, <span class="st">"benchmark_2010-2026"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">"score_2010-2023"</span>, <span class="st">"score_2024-2026"</span>, <span class="st">"ic_bas"</span>, <span class="st">"ic_haut"</span>, <span class="st">"bat_benchmark"</span>]].rename(columns<span class="op">=</span>{</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cible"</span>: <span class="st">"Cible"</span>, <span class="st">"horizon"</span>: <span class="st">"Horizon"</span>, <span class="st">"lecture"</span>: <span class="st">"Lecture"</span>, <span class="st">"modele"</span>: <span class="st">"Modèle"</span>, <span class="st">"benchmark"</span>: <span class="st">"Benchmark"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"score_2010-2026"</span>: <span class="st">"Modèle 2010-26"</span>, <span class="st">"benchmark_2010-2026"</span>: <span class="st">"Benchmark 2010-26"</span>, <span class="st">"score_2010-2023"</span>: <span class="st">"Modèle 2010-23"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"score_2024-2026"</span>: <span class="st">"Modèle 2024-26"</span>, <span class="st">"ic_bas"</span>: <span class="st">"IC bas"</span>, <span class="st">"ic_haut"</span>: <span class="st">"IC haut"</span>, <span class="st">"bat_benchmark"</span>: <span class="st">"Bat ?"</span>}))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<table class="dataframe table table-sm table-striped caption-top small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Cible</th>
+<th data-quarto-table-cell-role="th">Horizon</th>
+<th data-quarto-table-cell-role="th">Lecture</th>
+<th data-quarto-table-cell-role="th">Modèle</th>
+<th data-quarto-table-cell-role="th">Benchmark</th>
+<th data-quarto-table-cell-role="th">Modèle 2010-26</th>
+<th data-quarto-table-cell-role="th">Benchmark 2010-26</th>
+<th data-quarto-table-cell-role="th">Modèle 2010-23</th>
+<th data-quarto-table-cell-role="th">Modèle 2024-26</th>
+<th data-quarto-table-cell-role="th">IC bas</th>
+<th data-quarto-table-cell-role="th">IC haut</th>
+<th data-quarto-table-cell-role="th">Bat ?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sens</td>
+<td>1</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>persistance</td>
+<td>0.492</td>
+<td>0.501</td>
+<td>0.495</td>
+<td>0.475</td>
+<td>-0.042</td>
+<td>0.025</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>1</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>persistance</td>
+<td>0.499</td>
+<td>0.501</td>
+<td>0.503</td>
+<td>0.476</td>
+<td>-0.034</td>
+<td>0.029</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>1</td>
+<td>sans_passage</td>
+<td>Gradient Boosting</td>
+<td>momentum</td>
+<td>0.492</td>
+<td>0.502</td>
+<td>0.495</td>
+<td>0.478</td>
+<td>-0.042</td>
+<td>0.021</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>1</td>
+<td>sans_passage</td>
+<td>Random Forest (contrôle)</td>
+<td>momentum</td>
+<td>0.498</td>
+<td>0.502</td>
+<td>0.502</td>
+<td>0.476</td>
+<td>-0.037</td>
+<td>0.029</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>5</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>logistique</td>
+<td>0.502</td>
+<td>0.503</td>
+<td>0.512</td>
+<td>0.454</td>
+<td>-0.033</td>
+<td>0.037</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>5</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>logistique</td>
+<td>0.504</td>
+<td>0.503</td>
+<td>0.507</td>
+<td>0.489</td>
+<td>-0.033</td>
+<td>0.040</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>5</td>
+<td>sans_passage</td>
+<td>Gradient Boosting</td>
+<td>majorite</td>
+<td>0.497</td>
+<td>0.500</td>
+<td>0.505</td>
+<td>0.455</td>
+<td>-0.036</td>
+<td>0.032</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>5</td>
+<td>sans_passage</td>
+<td>Random Forest (contrôle)</td>
+<td>majorite</td>
+<td>0.495</td>
+<td>0.500</td>
+<td>0.497</td>
+<td>0.482</td>
+<td>-0.040</td>
+<td>0.027</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>20</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>logistique</td>
+<td>0.508</td>
+<td>0.542</td>
+<td>0.525</td>
+<td>0.421</td>
+<td>-0.092</td>
+<td>0.015</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>20</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>logistique</td>
+<td>0.470</td>
+<td>0.542</td>
+<td>0.487</td>
+<td>0.378</td>
+<td>-0.130</td>
+<td>-0.022</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>20</td>
+<td>sans_passage</td>
+<td>Gradient Boosting</td>
+<td>persistance</td>
+<td>0.476</td>
+<td>0.514</td>
+<td>0.492</td>
+<td>0.389</td>
+<td>-0.142</td>
+<td>0.073</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>20</td>
+<td>sans_passage</td>
+<td>Random Forest (contrôle)</td>
+<td>persistance</td>
+<td>0.448</td>
+<td>0.514</td>
+<td>0.470</td>
+<td>0.321</td>
+<td>-0.164</td>
+<td>0.037</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>60</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>logistique</td>
+<td>0.442</td>
+<td>0.514</td>
+<td>0.438</td>
+<td>0.432</td>
+<td>-0.144</td>
+<td>0.010</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>60</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>logistique</td>
+<td>0.450</td>
+<td>0.514</td>
+<td>0.455</td>
+<td>0.392</td>
+<td>-0.167</td>
+<td>0.028</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>60</td>
+<td>sans_sauts</td>
+<td>Gradient Boosting</td>
+<td>majorite</td>
+<td>0.418</td>
+<td>0.500</td>
+<td>0.433</td>
+<td>0.346</td>
+<td>-0.170</td>
+<td>0.010</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>60</td>
+<td>sans_sauts</td>
+<td>Random Forest (contrôle)</td>
+<td>majorite</td>
+<td>0.436</td>
+<td>0.500</td>
+<td>0.463</td>
+<td>0.290</td>
+<td>-0.142</td>
+<td>0.023</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>120</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>majorite</td>
+<td>0.442</td>
+<td>0.500</td>
+<td>0.434</td>
+<td>0.446</td>
+<td>-0.169</td>
+<td>0.071</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>120</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>majorite</td>
+<td>0.465</td>
+<td>0.500</td>
+<td>0.485</td>
+<td>0.386</td>
+<td>-0.137</td>
+<td>0.091</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>120</td>
+<td>sans_sauts</td>
+<td>Gradient Boosting</td>
+<td>momentum</td>
+<td>0.397</td>
+<td>0.513</td>
+<td>0.433</td>
+<td>0.179</td>
+<td>-0.280</td>
+<td>0.045</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>120</td>
+<td>sans_sauts</td>
+<td>Random Forest (contrôle)</td>
+<td>momentum</td>
+<td>0.443</td>
+<td>0.513</td>
+<td>0.443</td>
+<td>0.459</td>
+<td>-0.205</td>
+<td>0.071</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>vol</td>
+<td>5</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>moyenne_passee</td>
+<td>0.199</td>
+<td>0.201</td>
+<td>0.133</td>
+<td>0.385</td>
+<td>-0.008</td>
+<td>0.013</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>vol</td>
+<td>5</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>moyenne_passee</td>
+<td>0.189</td>
+<td>0.201</td>
+<td>0.117</td>
+<td>0.382</td>
+<td>0.005</td>
+<td>0.019</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td>vol</td>
+<td>5</td>
+<td>sans_passage</td>
+<td>Gradient Boosting</td>
+<td>moyenne_passee</td>
+<td>0.181</td>
+<td>0.180</td>
+<td>0.132</td>
+<td>0.330</td>
+<td>-0.011</td>
+<td>0.011</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>vol</td>
+<td>5</td>
+<td>sans_passage</td>
+<td>Random Forest (contrôle)</td>
+<td>moyenne_passee</td>
+<td>0.169</td>
+<td>0.180</td>
+<td>0.115</td>
+<td>0.323</td>
+<td>0.005</td>
+<td>0.019</td>
+<td>True</td>
+</tr>
+<tr class="odd">
+<td>vol</td>
+<td>20</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>persistance</td>
+<td>0.144</td>
+<td>0.116</td>
+<td>0.085</td>
+<td>0.297</td>
+<td>-0.050</td>
+<td>0.002</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>vol</td>
+<td>20</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>persistance</td>
+<td>0.147</td>
+<td>0.116</td>
+<td>0.082</td>
+<td>0.312</td>
+<td>-0.055</td>
+<td>-0.003</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>vol</td>
+<td>20</td>
+<td>sans_passage</td>
+<td>Gradient Boosting</td>
+<td>persistance</td>
+<td>0.125</td>
+<td>0.117</td>
+<td>0.087</td>
+<td>0.239</td>
+<td>-0.031</td>
+<td>0.021</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>vol</td>
+<td>20</td>
+<td>sans_passage</td>
+<td>Random Forest (contrôle)</td>
+<td>persistance</td>
+<td>0.126</td>
+<td>0.117</td>
+<td>0.084</td>
+<td>0.248</td>
+<td>-0.034</td>
+<td>0.020</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>vol</td>
+<td>60</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>persistance</td>
+<td>0.139</td>
+<td>0.093</td>
+<td>0.074</td>
+<td>0.305</td>
+<td>-0.076</td>
+<td>-0.013</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>vol</td>
+<td>60</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>persistance</td>
+<td>0.141</td>
+<td>0.093</td>
+<td>0.072</td>
+<td>0.315</td>
+<td>-0.082</td>
+<td>-0.010</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td>vol</td>
+<td>120</td>
+<td>brute</td>
+<td>Gradient Boosting</td>
+<td>persistance</td>
+<td>0.147</td>
+<td>0.106</td>
+<td>0.085</td>
+<td>0.328</td>
+<td>-0.080</td>
+<td>-0.005</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td>vol</td>
+<td>120</td>
+<td>brute</td>
+<td>Random Forest (contrôle)</td>
+<td>persistance</td>
+<td>0.140</td>
+<td>0.106</td>
+<td>0.078</td>
+<td>0.315</td>
+<td>-0.073</td>
+<td>0.001</td>
+<td>False</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Pour le sens, le score est l’exactitude équilibrée. Pour la volatilité, c’est la RMSE. La Random Forest bat le benchmark sur la volatilité à 5 séances. C’est le modèle de contrôle, et le protocole interdit de choisir le meilleur modèle après coup : ce résultat reste exploratoire.</p>
+</section>
+</section>
+<section id="tests-de-robustesse" class="level2">
+<h2 class="anchored" data-anchor-id="tests-de-robustesse">Tests de robustesse</h2>
+<p>Les mêmes comparaisons, en changeant un élément à la fois.</p>
+<ul>
+<li><strong>Pluie NASA</strong> remplace ERA5 et CHIRPS.</li>
+<li><strong>Oracle</strong> ajoute la météo <strong>réellement observée</strong> sur les 7 jours suivants. C’est une triche volontaire, qui mesure ce qu’apporterait une prévision météo parfaite.</li>
+<li>Les <strong>prévisions GEFS</strong> donnent les mêmes écarts que la base, à 0,01 près. Elles figurent dans le tableau.</li>
+</ul>
+<div id="9707f574" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> lire(<span class="st">"robustesse.csv"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>noms <span class="op">=</span> {<span class="st">"base"</span>: <span class="st">"Modèle principal"</span>, <span class="st">"pluie_nasa"</span>: <span class="st">"Pluie NASA"</span>, <span class="st">"oracle"</span>: <span class="st">"Oracle (météo parfaite)"</span>}</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cible, titre, axe <span class="kw">in</span> ((<span class="st">"sens"</span>, <span class="st">"Sens du prix"</span>, <span class="st">"Écart d'exactitude"</span>), (<span class="st">"vol"</span>, <span class="st">"Volatilité (positif = modèle meilleur)"</span>, <span class="st">"Écart de RMSE"</span>)):</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    HORIZONS_POS <span class="op">=</span> {h: i <span class="cf">for</span> i, h <span class="kw">in</span> <span class="bu">enumerate</span>(HORIZONS[cible])}</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> r[(r[<span class="st">"cible"</span>] <span class="op">==</span> cible) <span class="op">&amp;</span> (r[<span class="st">"lecture"</span>] <span class="op">==</span> <span class="st">"brute"</span>) <span class="op">&amp;</span> (r[<span class="st">"periode"</span>] <span class="op">==</span> <span class="st">"2010-2026"</span>)]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    points_ic(t, {nom: (t[<span class="st">"variante"</span>] <span class="op">==</span> v, SERIE[k]) <span class="cf">for</span> k, (v, nom) <span class="kw">in</span> <span class="bu">enumerate</span>(noms.items())},</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>              <span class="ss">f"Robustesse, </span><span class="sc">{</span>titre<span class="sc">}</span><span class="ss"> : écart au benchmark, 2010-2026"</span>, axe).show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div style="height:400px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="498f1c18-738c-48f2-9a3a-128d8e2b1b33" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("498f1c18-738c-48f2-9a3a-128d8e2b1b33")) {                    Plotly.newPlot(                        "498f1c18-738c-48f2-9a3a-128d8e2b1b33",                        [{"customdata":{"dtype":"f8","bdata":"AAAAAAAA8D9vY4cX3E6lv836ghn9iZk\u002fAAAAAAAAFEDEK94Hs8OgvztifUJpEaM\u002fAAAAAAAANEAFfW5nUJK3vzOsB0Yy0I0\u002fAAAAAAAATkAqh9eMO2jCv\u002fuo3MptEYU\u002fAAAAAAAAXkBJcOJQR5vFv93MBfNcLrI\u002f","shape":"5, 3"},"error_y":{"array":{"dtype":"f8","bdata":"Jm+TpfiYoT8rzN0xwXyjP026VVMBrqg\u002f\u002fz71pewAtT9oI6m4OIjAPw=="},"arrayminus":{"dtype":"f8","bdata":"r3G1\u002fuF6oD\u002fUwX0YW1igP8oqCQ2s6q0\u002fdGQVLbhxsj+eZngjelS8Pw=="},"color":"#2a78d6","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Mod\u00e8le principal\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2a78d6","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Mod\u00e8le principal","x":[-0.18,0.8200000000000001,1.82,2.82,3.82],"y":{"dtype":"f8","bdata":"AMdHY+hPg78AfBrY+9VKv0DP08H0OaG\u002f4KmZ7L5esr\u002fo85j8KMStvw=="},"type":"scatter"},{"customdata":{"dtype":"f8","bdata":"AAAAAAAA8D\u002fuUy6OYOKev8rPGqIA9qE\u002fAAAAAAAAFEDD6HbilYCbv+VnjXePbag\u002fAAAAAAAANEAZofZCk62xv\u002fvxozQzq6A\u002fAAAAAAAATkAXg\u002f4aUH+2vwipIjsvuLc\u002fAAAAAAAAXkAVRjqb\u002fJLBvwAg6iSTz7k\u002f","shape":"5, 3"},"error_y":{"array":{"dtype":"f8","bdata":"+tmYoCSJoD+Vw5DD64+jP5up9cATC6s\u002fOB2ZGSo6uD8YbyavLRXAPw=="},"arrayminus":{"dtype":"f8","bdata":"xx+ZSAzeoD+yGDil7p2iP5KKm\u002flF+6g\u002f5w6IPFX9tT\u002f6zRH9MMu8Pw=="},"color":"#eb6834","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Pluie NASA\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#eb6834","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Pluie NASA","x":[0.0,1.0,2.0,3.0,4.0],"y":{"dtype":"f8","bdata":"AF0fGMDNZj9AkfLPjnaDP0BvoxjBv5S\u002fAIbOzls\u002fYL\u002fA+IrlIGuZvw=="},"type":"scatter"},{"customdata":{"dtype":"f8","bdata":"AAAAAAAA8D8\u002fdxzH3qajv7BeFZ9Aup4\u002fAAAAAAAAFECsKOu+UQilv3VpoY62hp8\u002fAAAAAAAANEBeNNi6+9S4vxyuoLQfUos\u002fAAAAAAAATkDS+sRiyH7CvzPtBFJtrYI\u002fAAAAAAAAXkBmYXOASOXEv5dz6tGFV7E\u002f","shape":"5, 3"},"error_y":{"array":{"dtype":"f8","bdata":"cFibsAqqoD\u002f6Yo1uPj+iP6fWQ4mWP6k\u002fWkHbYYGLtD+EosbYyzPAPw=="},"arrayminus":{"dtype":"f8","bdata":"J84LZvRZoj9seq6XboyiP5y9lNnoPq8\u002f8FHvDb3Hsj9c8UMhf7q6Pw=="},"color":"#1baf7a","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Oracle (m\u00e9t\u00e9o parfaite)\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#1baf7a","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Oracle (m\u00e9t\u00e9o parfaite)","x":[0.18,1.18,2.18,3.18,4.18],"y":{"dtype":"f8","bdata":"gJEKEabOZL8AcuU5Gd9zvyCrG5wOa6K\u002ftKOat9M1sr\u002fgokW\u002fIyCuvw=="},"type":"scatter"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"shapes":[{"line":{"color":"#898781","dash":"dot","width":1.5},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0,"y1":0,"yref":"y"}],"xaxis":{"tickvals":[0,1,2,3,4],"ticktext":["1 s\u00e9ances","5 s\u00e9ances","20 s\u00e9ances","60 s\u00e9ances","120 s\u00e9ances"]},"title":{"text":"Robustesse, Sens du prix : \u00e9cart au benchmark, 2010-2026"},"height":400,"yaxis":{"title":{"text":"\u00c9cart d'exactitude"}}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('498f1c18-738c-48f2-9a3a-128d8e2b1b33');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+<div class="cell-output cell-output-display">
+<div style="height:400px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="17fdcabc-c5e9-4cb4-b2ba-ac0ea3085973" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("17fdcabc-c5e9-4cb4-b2ba-ac0ea3085973")) {                    Plotly.newPlot(                        "17fdcabc-c5e9-4cb4-b2ba-ac0ea3085973",                        [{"customdata":{"dtype":"f8","bdata":"AAAAAAAAFECZU1I4GLaAv+21LwWVGIo\u002fAAAAAAAANEBm9h5lNXGpvzqnC437+1s\u002fAAAAAAAATkDAwgf9Hnezv62Qc\u002fFAwYm\u002fAAAAAAAAXkCITKQmcI+0v4MUP\u002f4tMXW\u002f","shape":"4, 3"},"error_y":{"array":{"dtype":"f8","bdata":"TeRs1dRRhj9AvnfZLnCePyVrAViPEqE\u002fgDSltsWzoj8="},"arrayminus":{"dtype":"f8","bdata":"OSUVaNh8hD8A6Zap+zGWP2BsYsu81p4\u002fAILb1vTEoz8="},"color":"#2a78d6","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Mod\u00e8le principal\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2a78d6","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Mod\u00e8le principal","x":[-0.18,0.8200000000000001,1.82,2.82],"y":{"dtype":"f8","bdata":"AI0WfgE2Xj\u002fMA6cgb7Ccv1BPXpTfgqe\u002fEBdtdutZpb8="},"type":"scatter"},{"customdata":{"dtype":"f8","bdata":"AAAAAAAAFEBpVGtn0c98vzkYXCNHlYg\u002fAAAAAAAANEAHgCjyKbOpv1JsANfEGlU\u002fAAAAAAAATkBYuVdyoL+zv9eClvOi5Yi\u002fAAAAAAAAXkDV0EJ\u002fsouzvxalhM+TX3e\u002f","shape":"4, 3"},"error_y":{"array":{"dtype":"f8","bdata":"aRZvWUIXhD9xzwT1crmeP0qQ4twxiqE\u002fBXBiQnXFoT8="},"arrayminus":{"dtype":"f8","bdata":"BKyife3lgj9iN7w8jf6VP2CDzpVMd58\u002fAp0yQv1loj8="},"color":"#eb6834","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Pluie NASA\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#eb6834","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Pluie NASA","x":[0.0,1.0,2.0,3.0],"y":{"dtype":"f8","bdata":"QAe0JxP4YT+syJSnxmedvwAxyJmaw6e\u002fqARTvGexpL8="},"type":"scatter"},{"customdata":{"dtype":"f8","bdata":"AAAAAAAAFECIcUPC\u002fIyEv772nRqfCIY\u002fAAAAAAAANEAiPu8FVWGpv2+oI2WH8mI\u002fAAAAAAAATkDnOTR17tWzv17k1EpdwIy\u002fAAAAAAAAXkB345RyoI+0vyHSU1GWQHW\u002f","shape":"4, 3"},"error_y":{"array":{"dtype":"f8","bdata":"jp7u8It1hj9aA03CndOePxgwviXcLqE\u002fSLXxd4yooj8="},"arrayminus":{"dtype":"f8","bdata":"uMny6w8ghD\u002f47TU2XU2WPzwV6uPSmZ4\u002fYpcNo6HOoz8="},"color":"#1baf7a","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Oracle (m\u00e9t\u00e9o parfaite)\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#1baf7a","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Oracle (m\u00e9t\u00e9o parfaite)","x":[0.18,1.18,2.18,3.18],"y":{"dtype":"f8","bdata":"APQplDU7K79MjqjVTHWcvzBpc3jzXqi\u002fjC8cQp9Qpb8="},"type":"scatter"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"shapes":[{"line":{"color":"#898781","dash":"dot","width":1.5},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0,"y1":0,"yref":"y"}],"xaxis":{"tickvals":[0,1,2,3],"ticktext":["5 s\u00e9ances","20 s\u00e9ances","60 s\u00e9ances","120 s\u00e9ances"]},"title":{"text":"Robustesse, Volatilit\u00e9 (positif = mod\u00e8le meilleur) : \u00e9cart au benchmark, 2010-2026"},"height":400,"yaxis":{"title":{"text":"\u00c9cart de RMSE"}}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('17fdcabc-c5e9-4cb4-b2ba-ac0ea3085973');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<div id="0c6deddf" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> r[r[<span class="st">"lecture"</span>] <span class="op">==</span> <span class="st">"brute"</span>].pivot_table(index<span class="op">=</span>[<span class="st">"cible"</span>, <span class="st">"horizon"</span>], columns<span class="op">=</span>[<span class="st">"variante"</span>, <span class="st">"periode"</span>], values<span class="op">=</span><span class="st">"ecart"</span>).<span class="bu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>t.columns <span class="op">=</span> [<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>p<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> v, p <span class="kw">in</span> t.columns]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tableau(t.reset_index())</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<table class="dataframe table table-sm table-striped caption-top small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">cible</th>
+<th data-quarto-table-cell-role="th">horizon</th>
+<th data-quarto-table-cell-role="th">base 2010-2023</th>
+<th data-quarto-table-cell-role="th">base 2010-2026</th>
+<th data-quarto-table-cell-role="th">gefs 2010-2023</th>
+<th data-quarto-table-cell-role="th">gefs 2010-2026</th>
+<th data-quarto-table-cell-role="th">oracle 2010-2023</th>
+<th data-quarto-table-cell-role="th">oracle 2010-2026</th>
+<th data-quarto-table-cell-role="th">pluie_nasa 2010-2023</th>
+<th data-quarto-table-cell-role="th">pluie_nasa 2010-2026</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sens</td>
+<td>1</td>
+<td>-0.011</td>
+<td>-0.009</td>
+<td>-0.009</td>
+<td>-0.005</td>
+<td>-0.004</td>
+<td>-0.003</td>
+<td>0.000</td>
+<td>0.003</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>5</td>
+<td>-0.003</td>
+<td>-0.001</td>
+<td>-0.013</td>
+<td>-0.006</td>
+<td>-0.008</td>
+<td>-0.005</td>
+<td>0.006</td>
+<td>0.010</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>20</td>
+<td>-0.025</td>
+<td>-0.034</td>
+<td>-0.028</td>
+<td>-0.033</td>
+<td>-0.027</td>
+<td>-0.036</td>
+<td>-0.019</td>
+<td>-0.020</td>
+</tr>
+<tr class="even">
+<td>sens</td>
+<td>60</td>
+<td>-0.056</td>
+<td>-0.072</td>
+<td>-0.052</td>
+<td>-0.065</td>
+<td>-0.055</td>
+<td>-0.071</td>
+<td>0.009</td>
+<td>-0.002</td>
+</tr>
+<tr class="odd">
+<td>sens</td>
+<td>120</td>
+<td>-0.066</td>
+<td>-0.058</td>
+<td>-0.060</td>
+<td>-0.057</td>
+<td>-0.065</td>
+<td>-0.059</td>
+<td>-0.051</td>
+<td>-0.025</td>
+</tr>
+<tr class="even">
+<td>vol</td>
+<td>5</td>
+<td>-0.017</td>
+<td>0.002</td>
+<td>-0.017</td>
+<td>0.002</td>
+<td>-0.020</td>
+<td>-0.000</td>
+<td>-0.016</td>
+<td>0.002</td>
+</tr>
+<tr class="odd">
+<td>vol</td>
+<td>20</td>
+<td>-0.014</td>
+<td>-0.028</td>
+<td>-0.014</td>
+<td>-0.028</td>
+<td>-0.014</td>
+<td>-0.028</td>
+<td>-0.015</td>
+<td>-0.029</td>
+</tr>
+<tr class="even">
+<td>vol</td>
+<td>60</td>
+<td>-0.020</td>
+<td>-0.046</td>
+<td>-0.020</td>
+<td>-0.046</td>
+<td>-0.024</td>
+<td>-0.048</td>
+<td>-0.020</td>
+<td>-0.046</td>
+</tr>
+<tr class="odd">
+<td>vol</td>
+<td>120</td>
+<td>-0.012</td>
+<td>-0.042</td>
+<td>-0.012</td>
+<td>-0.042</td>
+<td>-0.012</td>
+<td>-0.042</td>
+<td>-0.014</td>
+<td>-0.040</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>Même la météo parfaite n’apporte rien</strong> : connaître à l’avance la pluie et la température de la semaine suivante ne rend pas le modèle meilleur que le benchmark. Sans la crise (2010-2023), le modèle reste aussi sous le benchmark.</p>
+</section>
+<section id="et-en-prévoyant-directement-le-rendement" class="level2">
+<h2 class="anchored" data-anchor-id="et-en-prévoyant-directement-le-rendement">Et en prévoyant directement le rendement ?</h2>
+<p>Dernier essai, décidé après les résultats et donc exploratoire (protocole, point 13). Au lieu du sens, le modèle prévoit le <strong>rendement</strong> à h séances, c’est-à-dire la variation du prix en pourcentage. Il est comparé à la <strong>marche aléatoire</strong>, qui suppose que le prix ne bouge pas, et à la moyenne passée des rendements. Intervalle à 99 %, corrigé pour 5 horizons.</p>
+<div id="295beba1" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> lire(<span class="st">"regression_rendements.csv"</span>).rename(columns<span class="op">=</span>{<span class="st">"ecart_rmse"</span>: <span class="st">"ecart"</span>})</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>HORIZONS_POS <span class="op">=</span> {h: i <span class="cf">for</span> i, h <span class="kw">in</span> <span class="bu">enumerate</span>(HORIZONS[<span class="st">"sens"</span>])}</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>points_ic(g, {<span class="st">"Lecture brute"</span>: (g[<span class="st">"lecture"</span>] <span class="op">==</span> <span class="st">"brute"</span>, SERIE[<span class="dv">0</span>]), <span class="st">"Lecture de contrôle"</span>: (g[<span class="st">"lecture"</span>] <span class="op">!=</span> <span class="st">"brute"</span>, SERIE[<span class="dv">1</span>])},</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>          <span class="st">"Rendement : écart de RMSE face à la marche aléatoire (positif = modèle meilleur)"</span>, <span class="st">"Écart de RMSE"</span>).show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div style="height:400px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="a28c116b-59bb-47f0-a233-9cacda7b1c87" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("a28c116b-59bb-47f0-a233-9cacda7b1c87")) {                    Plotly.newPlot(                        "a28c116b-59bb-47f0-a233-9cacda7b1c87",                        [{"customdata":{"dtype":"f8","bdata":"AAAAAAAA8D\u002feJOpMFJRFv28fnjrV8im\u002fAAAAAAAAFEBPF94LsCFzv0jO\u002fimb1VO\u002fAAAAAAAANED8VBPYAReTv8\u002fI1wOThEy\u002fAAAAAAAATkDA+J6flZKmv9SoDeacioG\u002fAAAAAAAAXkBXDyFejCGtv2Fw23NUnYu\u002f","shape":"5, 3"},"error_y":{"array":{"dtype":"f8","bdata":"kazdSiCaLT\u002fY24G0rSpbP9vnKt2tWYM\u002fvCa4dpoujz\u002fQxpRs3X+SPw=="},"arrayminus":{"dtype":"f8","bdata":"eMcsrlvDLj8cs\u002fdQd4ZdP5BFvqIMDIE\u002fuAnbkI\u002fIlD+un78VkfSZPw=="},"color":"#2a78d6","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Lecture brute\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2a78d6","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Lecture brute","x":[-0.09,0.91,1.91,2.91,3.91],"y":{"dtype":"f8","bdata":"AOa9wnrGO78QVUBvJIBnv2hkaA33IYW\u002fyOdirptcmL+AP0HTQyegvw=="},"type":"scatter"},{"customdata":{"dtype":"f8","bdata":"AAAAAAAA8D9X3rKvPc1Gv+V0gCWenS+\u002fAAAAAAAAFECVMZBNSFt0v+GuUozXpFe\u002fAAAAAAAANECHx+8c+\u002fOVv\u002fwZU2marEM\u002fAAAAAAAATkC2MI6NRvirvyH0A7D9K5G\u002fAAAAAAAAXkD1+2wtGZ2wv5\u002fQW3h99oi\u002f","shape":"5, 3"},"error_y":{"array":{"dtype":"f8","bdata":"G+fjonQkKz9f2jopa4xcP3DjQiVgeIg\u002f7100QLcskT+AadCqRY2TPw=="},"arrayminus":{"dtype":"f8","bdata":"ro4z+3E5MD8UPbOA3jtdPz7dMbtfqoQ\u002fXA\u002fkKtiXlT8Cz1on8DWhPw=="},"color":"#eb6834","symmetric":false,"thickness":2,"type":"data","width":4},"hovertemplate":"Lecture de contr\u00f4le\u003cbr\u003eHorizon %{customdata[0]} s\u00e9ances\u003cbr\u003e\u00c9cart %{y:+.3f}\u003cbr\u003eIC 99,4 % : %{customdata[1]:+.3f} \u00e0 %{customdata[2]:+.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#eb6834","line":{"color":"white","width":2},"size":10},"mode":"markers","name":"Lecture de contr\u00f4le","x":[0.09,1.09,2.09,3.09,4.09],"y":{"dtype":"f8","bdata":"AC4yZAlhPb+gxMZaoRhqv9CxrX6WPYe\u002fCCkceFosob\u002foKH8zQgSgvw=="},"type":"scatter"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"shapes":[{"line":{"color":"#898781","dash":"dot","width":1.5},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0,"y1":0,"yref":"y"}],"xaxis":{"tickvals":[0,1,2,3,4],"ticktext":["1 s\u00e9ances","5 s\u00e9ances","20 s\u00e9ances","60 s\u00e9ances","120 s\u00e9ances"]},"title":{"text":"Rendement : \u00e9cart de RMSE face \u00e0 la marche al\u00e9atoire (positif = mod\u00e8le meilleur)"},"height":400,"yaxis":{"title":{"text":"\u00c9cart de RMSE"}}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('a28c116b-59bb-47f0-a233-9cacda7b1c87');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<p>Le modèle fait <strong>significativement moins bien que la marche aléatoire</strong> à presque tous les horizons : les barres sont entièrement sous zéro. Il ne devine le signe du rendement que dans 42 à 52 % des cas. Comme le prévoyait le protocole, aucune « courbe de prix prévu » n’est donc tracée : la meilleure prévision du prix de demain reste le prix d’aujourd’hui.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Projet individuel, cours de machine learning en finance (emlyon). Analyse menée avec l’aide de Claude Code ; détails dans la page Méthode.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

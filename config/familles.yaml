@@ -1,0 +1,53 @@
+# Repartition des colonnes du dataset dans les 7 familles. Motifs : debut du nom de colonne.
+# Les transformations sont faites dans src/cacao/variables.py, sans regarder les resultats.
+climat:
+  - NASA_T2M_MAX
+  - NASA_RH2M
+  - NASA_GWETROOT
+  - NASA_ALLSKY_SFC_SW_DWN
+  - NASA_WS2M
+  - ERA5_ANOM
+  - CHIRPS_ANOM
+  - ONI
+  - GEFS_
+geopolitique:
+  - GPR_
+  - GDELT_EV_
+biodiversite:
+  - FAO_RENDEMENT
+  - FAO_PESTICIDES
+  - FAO_AZOTE
+  - FEUX_
+couts_production:
+  - PRIX_UREE
+  - PRIX_DAP
+  - PRIX_TSP
+  - PRIX_POTASSE
+  - cl_f
+  - ng_f
+  - ghs_x
+  - idr_x
+  - ngn_x
+  - eurusd_x
+production_offre:
+  - FAO_PRODUCTION
+marche_finance:
+  - cacao_close
+  - cacao_volume
+  - dx_y_nyb
+  - tnx
+  - irx
+investisseurs_biais:
+  - CFTC_
+  - TRENDS_
+  - GDELT_cacao
+demande_substituts:
+  - barn_sw
+  - hsy
+  - mdlz
+  - nesn_sw
+  - lisn_sw
+  - lisp_sw
+  - PRIX_SUCRE
+  - PRIX_HUILE_PALME
+  - PRIX_CAFE_ROBUSTA

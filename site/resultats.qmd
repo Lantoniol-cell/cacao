@@ -1,0 +1,159 @@
+---
+title: "Résultats : le modèle face au benchmark"
+---
+
+```{python}
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+from sklearn.metrics import balanced_accuracy_score
+from _commun import DATASET, METRIQUES, SERIE, MUET, lire, tableau
+
+c = lire("modele_horizons.csv")
+HORIZONS = {"sens": [1, 5, 20, 60, 120], "vol": [5, 20, 60, 120]}
+
+
+def points_ic(t, series, titre, axe_y):
+    """Ecart au benchmark et intervalle a 99,4 %, un point par horizon et par serie."""
+    fig = go.Figure()
+    n = len(series)
+    for k, (nom, (filtre, couleur)) in enumerate(series.items()):
+        x = t[filtre]
+        pos = [HORIZONS_POS[h] + (k - (n - 1) / 2) * 0.18 for h in x["horizon"]]
+        fig.add_scatter(x=pos, y=x["ecart"], mode="markers", name=nom,
+                        marker=dict(size=10, color=couleur, line=dict(width=2, color="white")),
+                        error_y=dict(type="data", symmetric=False, array=x["ic_haut"] - x["ecart"],
+                                     arrayminus=x["ecart"] - x["ic_bas"], color=couleur, thickness=2, width=4),
+                        customdata=np.stack([x["horizon"], x["ic_bas"], x["ic_haut"]], axis=1),
+                        hovertemplate=f"{nom}<br>Horizon %{{customdata[0]}} séances<br>Écart %{{y:+.3f}}"
+                                      "<br>IC 99,4 % : %{customdata[1]:+.3f} à %{customdata[2]:+.3f}<extra></extra>")
+    fig.add_hline(y=0, line=dict(color=MUET, width=1.5, dash="dot"))
+    fig.update_layout(title=titre, height=400, yaxis_title=axe_y,
+                      xaxis=dict(tickvals=list(HORIZONS_POS.values()), ticktext=[f"{h} séances" for h in HORIZONS_POS]))
+    return fig
+```
+
+## En bref
+
+On a entraîné un modèle de machine learning à prévoir le cacao à partir des 8 familles de facteurs. On l'a comparé à des modèles simples **sans aucun facteur**, qui ne regardent que le prix passé. Si les facteurs apportaient de l'information, le modèle devrait battre ces modèles simples. **Ce n'est le cas pour aucun horizon.**
+
+Quelques termes :
+
+- **Sens du prix :** le cours sera-t-il plus haut ou plus bas dans 1, 5, 20, 60 ou 120 séances ? Une séance est un jour de cotation : 20 séances font environ un mois, 120 environ six mois.
+- **Exactitude équilibrée :** la part de bonnes prévisions, corrigée pour que hausses et baisses pèsent autant. **0,5 correspond au hasard**, comme à pile ou face.
+- **Volatilité :** l'ampleur des variations du cours, qu'elles soient à la hausse ou à la baisse. Elle est mesurée par la **RMSE**, l'erreur moyenne de prévision : plus elle est basse, mieux c'est.
+- **Benchmark :** le meilleur modèle sans facteurs, par exemple « la tendance récente continue » ou « l'agitation récente persiste ».
+- **Hors échantillon :** chaque année est prévue avec un modèle entraîné uniquement sur les années précédentes, comme en conditions réelles.
+
+## Lecture des graphiques
+
+Chaque point est l'**écart entre le modèle à facteurs et le meilleur modèle sans facteurs** sur 2010-2026. La barre est l'intervalle de confiance à 99,4 %, calculé par bootstrap par blocs. Ce niveau corrige les 9 comparaisons (5 % divisé par 9).
+
+- **Au-dessus de zéro**, le modèle à facteurs fait mieux.
+- Il ne **bat** le benchmark que si toute la barre est au-dessus de zéro, dans les deux lectures.
+
+## Sens du prix
+
+```{python}
+HORIZONS_POS = {h: i for i, h in enumerate(HORIZONS["sens"])}
+t = c[(c["cible"] == "sens") & (c["modele"] == "gradient_boosting")]
+points_ic(t, {"Lecture brute": (t["lecture"] == "brute", SERIE[0]),
+              "Lecture de contrôle": (t["lecture"] != "brute", SERIE[1])},
+          "Sens du prix : écart d'exactitude équilibrée au benchmark", "Écart (points d'exactitude)").show()
+```
+
+Aucun intervalle n'est entièrement au-dessus de zéro. Jusqu'à 5 séances, le modèle est au niveau du hasard, comme le benchmark. À 60 et 120 séances, il fait **moins bien que le hasard**. Il apprend des régimes passés qui ne se répètent pas.
+
+### Année par année, à 20 séances
+
+```{python}
+p = pd.read_parquet(METRIQUES / "modele_predictions.parquet")
+y = pd.read_parquet(DATASET, columns=["cible_hausse_20"])["cible_hausse_20"]
+lignes = []
+for nom, col in (("Modèle à facteurs", "sens_20_brute_gradient_boosting"), ("Meilleur sans facteurs", "sens_20_brute_benchmark")):
+    s = p[col].reindex(y.index)
+    for a in range(2010, 2027):
+        i = (y.index.year == a) & y.notna() & s.notna()
+        if i.sum() > 20 and y[i].nunique() == 2:
+            lignes.append({"annee": a, "serie": nom, "score": balanced_accuracy_score(y[i].astype(int), (s[i] > 0.5).astype(int))})
+a = pd.DataFrame(lignes)
+fig = go.Figure()
+for k, nom in enumerate(["Modèle à facteurs", "Meilleur sans facteurs"]):
+    x = a[a["serie"] == nom]
+    fig.add_scatter(x=x["annee"], y=x["score"], mode="lines+markers", name=nom, line=dict(width=2, color=SERIE[k]),
+                    marker=dict(size=8), hovertemplate=f"{nom}<br>%{{x}} : %{{y:.3f}}<extra></extra>")
+fig.add_hline(y=0.5, line=dict(color=MUET, width=1.5, dash="dot"))
+fig.add_vrect(x0=2023.5, x1=2026.5, fillcolor=SERIE[1], opacity=0.07, line_width=0,
+              annotation_text="Crise 2024-2026", annotation_position="top left")
+fig.update_layout(title="Sens à 20 séances : exactitude équilibrée par année de test", height=380,
+                  yaxis_title="Exactitude équilibrée")
+fig.show()
+```
+
+## Volatilité
+
+```{python}
+HORIZONS_POS = {h: i for i, h in enumerate(HORIZONS["vol"])}
+t = c[(c["cible"] == "vol") & (c["modele"] == "gradient_boosting")]
+points_ic(t, {"Lecture brute": (t["lecture"] == "brute", SERIE[0]),
+              "Lecture de contrôle": (t["lecture"] != "brute", SERIE[1])},
+          "Volatilité : écart de RMSE au benchmark (positif = modèle meilleur)", "Écart de RMSE").show()
+```
+
+Pour la volatilité, le benchmark est la volatilité récente (persistance) ou sa moyenne passée. À 60 et 120 séances, le modèle à facteurs fait **significativement moins bien** : toute la barre est sous zéro. Le protocole ne définit pas de lecture de contrôle pour ces deux horizons.
+
+### Tous les scores
+
+```{python}
+t = c.copy()
+sens = t["cible"] == "sens"
+for col in ["score_2010-2026", "benchmark_2010-2026", "score_2010-2023", "benchmark_2010-2023", "score_2024-2026", "benchmark_2024-2026"]:
+    t[col] = t[col].where(sens, -t[col])
+t["modele"] = t["modele"].map({"gradient_boosting": "Gradient Boosting", "random_forest": "Random Forest (contrôle)"})
+tableau(t[["cible", "horizon", "lecture", "modele", "benchmark", "score_2010-2026", "benchmark_2010-2026",
+           "score_2010-2023", "score_2024-2026", "ic_bas", "ic_haut", "bat_benchmark"]].rename(columns={
+    "cible": "Cible", "horizon": "Horizon", "lecture": "Lecture", "modele": "Modèle", "benchmark": "Benchmark",
+    "score_2010-2026": "Modèle 2010-26", "benchmark_2010-2026": "Benchmark 2010-26", "score_2010-2023": "Modèle 2010-23",
+    "score_2024-2026": "Modèle 2024-26", "ic_bas": "IC bas", "ic_haut": "IC haut", "bat_benchmark": "Bat ?"}))
+```
+
+Pour le sens, le score est l'exactitude équilibrée. Pour la volatilité, c'est la RMSE. La Random Forest bat le benchmark sur la volatilité à 5 séances. C'est le modèle de contrôle, et le protocole interdit de choisir le meilleur modèle après coup : ce résultat reste exploratoire.
+
+## Tests de robustesse
+
+Les mêmes comparaisons, en changeant un élément à la fois.
+
+- **Pluie NASA** remplace ERA5 et CHIRPS.
+- **Oracle** ajoute la météo **réellement observée** sur les 7 jours suivants. C'est une triche volontaire, qui mesure ce qu'apporterait une prévision météo parfaite.
+- Les **prévisions GEFS** donnent les mêmes écarts que la base, à 0,01 près. Elles figurent dans le tableau.
+
+```{python}
+r = lire("robustesse.csv")
+noms = {"base": "Modèle principal", "pluie_nasa": "Pluie NASA", "oracle": "Oracle (météo parfaite)"}
+for cible, titre, axe in (("sens", "Sens du prix", "Écart d'exactitude"), ("vol", "Volatilité (positif = modèle meilleur)", "Écart de RMSE")):
+    HORIZONS_POS = {h: i for i, h in enumerate(HORIZONS[cible])}
+    t = r[(r["cible"] == cible) & (r["lecture"] == "brute") & (r["periode"] == "2010-2026")]
+    points_ic(t, {nom: (t["variante"] == v, SERIE[k]) for k, (v, nom) in enumerate(noms.items())},
+              f"Robustesse, {titre} : écart au benchmark, 2010-2026", axe).show()
+```
+
+```{python}
+t = r[r["lecture"] == "brute"].pivot_table(index=["cible", "horizon"], columns=["variante", "periode"], values="ecart").round(3)
+t.columns = [f"{v} {p}" for v, p in t.columns]
+tableau(t.reset_index())
+```
+
+**Même la météo parfaite n'apporte rien** : connaître à l'avance la pluie et la température de la semaine suivante ne rend pas le modèle meilleur que le benchmark. Sans la crise (2010-2023), le modèle reste aussi sous le benchmark.
+
+## Et en prévoyant directement le rendement ?
+
+Dernier essai, décidé après les résultats et donc exploratoire (protocole, point 13). Au lieu du sens, le modèle prévoit le **rendement** à h séances, c'est-à-dire la variation du prix en pourcentage. Il est comparé à la **marche aléatoire**, qui suppose que le prix ne bouge pas, et à la moyenne passée des rendements. Intervalle à 99 %, corrigé pour 5 horizons.
+
+```{python}
+g = lire("regression_rendements.csv").rename(columns={"ecart_rmse": "ecart"})
+HORIZONS_POS = {h: i for i, h in enumerate(HORIZONS["sens"])}
+points_ic(g, {"Lecture brute": (g["lecture"] == "brute", SERIE[0]), "Lecture de contrôle": (g["lecture"] != "brute", SERIE[1])},
+          "Rendement : écart de RMSE face à la marche aléatoire (positif = modèle meilleur)", "Écart de RMSE").show()
+```
+
+Le modèle fait **significativement moins bien que la marche aléatoire** à presque tous les horizons : les barres sont entièrement sous zéro. Il ne devine le signe du rendement que dans 42 à 52 % des cas. Comme le prévoyait le protocole, aucune « courbe de prix prévu » n'est donc tracée : la meilleure prévision du prix de demain reste le prix d'aujourd'hui.

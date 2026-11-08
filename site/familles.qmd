@@ -1,0 +1,90 @@
+---
+title: "Familles de facteurs"
+---
+
+::: {.callout-warning}
+## À lire comme exploratoire
+
+Le modèle à facteurs ne bat le benchmark sur aucune cible. Le protocole, fixé avant les résultats, interdit alors de présenter un classement des familles comme un résultat. Cette page décrit donc ce qu'utilise un modèle qui ne fait pas mieux qu'un modèle sans facteurs. Elle montre aussi pourquoi les deux mesures d'impact ne racontent pas la même histoire.
+:::
+
+```{python}
+import plotly.graph_objects as go
+from _commun import DIVERGENT, SEQUENTIEL, FAMILLES, lire
+
+COLONNES = [("sens", 1), ("sens", 5), ("sens", 20), ("sens", 60), ("sens", 120), ("vol", 5), ("vol", 20), ("vol", 60), ("vol", 120)]
+ETIQ = [f"{'Sens' if c == 'sens' else 'Vol.'} {h}" for c, h in COLONNES]
+
+
+def carte(t, valeur, titre, echelle, centre, texte):
+    m = t.pivot_table(index="famille", columns=["cible", "horizon"], values=valeur).reindex(columns=COLONNES)
+    m = m.reindex(list(FAMILLES))
+    z = m.to_numpy()
+    lim = abs(z).max() if centre else None
+    fig = go.Figure(go.Heatmap(
+        z=z, x=ETIQ, y=[FAMILLES[f] for f in m.index], colorscale=echelle, zmid=0 if centre else None,
+        zmin=-lim if centre else 0, zmax=lim if centre else None, xgap=2, ygap=2,
+        text=[[texte(v) for v in ligne] for ligne in z], texttemplate="%{text}", textfont=dict(size=11),
+        hovertemplate="%{y}<br>%{x}<br>%{text}<extra></extra>", colorbar=dict(thickness=10)))
+    fig.update_layout(title=titre, height=430, yaxis=dict(autorange="reversed", automargin=True), xaxis=dict(side="top"),
+                      margin=dict(t=110, l=170))
+    return fig
+```
+
+## Mesure principale : retrait d'une famille
+
+On refait le modèle sans une famille, puis on mesure la perte de performance hors échantillon.
+
+- **Positif (rouge) :** la famille aidait le modèle.
+- **Négatif (bleu) :** le modèle est **meilleur sans elle**.
+- Un astérisque marque un intervalle à 99,4 % qui exclut zéro.
+
+```{python}
+r = lire("retrait_familles.csv")
+r["sig"] = (r["ic_bas"] > 0) | (r["ic_haut"] < 0)
+r["texte"] = r["perte"].round(3).astype(str) + r["sig"].map({True: "*", False: ""})
+m = r.set_index(["famille", "cible", "horizon"])["texte"]
+fig = carte(r, "perte", "Perte au retrait de chaque famille (exactitude pour le sens, RMSE pour la volatilité)",
+            DIVERGENT, True, lambda v: f"{v:+.3f}")
+fig.data[0].text = [[m.get((f, c, h), "") for c, h in COLONNES] for f in FAMILLES]
+fig.show()
+```
+
+- **Volatilité :** retirer le marché et la finance dégrade nettement le modèle. L'information utile est dans les prix et la volatilité passés, que le benchmark de persistance capte déjà.
+- **Sens à 60 séances :** retirer le climat **améliore** le modèle de 6 points. Les variables climatiques y ajoutent du bruit.
+
+## Mesure secondaire : SHAP
+
+Part de chaque famille dans les contributions SHAP absolues moyennes, sur 2010-2023.
+
+```{python}
+s = lire("shap_familles.csv")
+s = s[s["periode"] == "2010-2023"]
+carte(s, "part", "Part des contributions SHAP par famille, 2010-2023", SEQUENTIEL, False, lambda v: f"{v:.0%}").show()
+```
+
+## Pourquoi les deux mesures divergent
+
+SHAP donne au climat **18 à 27 %** des contributions pour le sens du prix. Le retrait montre pourtant que ces contributions n'aident pas hors échantillon. Trois raisons :
+
+1. **SHAP mesure l'usage, pas l'utilité.** Il dit sur quelles variables le modèle s'appuie, pas si cet appui améliore la prévision.
+2. **Les familles n'ont pas la même taille.** Le climat compte plus de 40 variables. Une somme de contributions favorise les grandes familles.
+3. **Les familles sont corrélées.** Le modèle peut répartir le même signal entre plusieurs familles.
+
+C'est le désaccord annoncé au point 7 du protocole, et une bonne leçon de méthode : **une forte part SHAP ne prouve pas qu'une variable est utile.**
+
+## Avant et depuis 2024
+
+```{python}
+s = lire("shap_familles.csv")
+t = s[(s["cible"] == "sens") & (s["horizon"] == 20)].pivot(index="famille", columns="periode", values="part").reindex(list(FAMILLES))
+fig = go.Figure()
+from _commun import SERIE
+for k, per in enumerate(["2010-2023", "2024-2026"]):
+    fig.add_bar(y=[FAMILLES[f] for f in t.index], x=t[per], orientation="h", name=per, marker_color=SERIE[k],
+                hovertemplate=f"%{{y}}<br>{per} : %{{x:.0%}}<extra></extra>")
+fig.update_layout(title="Sens à 20 séances : part SHAP par famille, avant et depuis 2024", barmode="group", bargap=0.3,
+                  bargroupgap=0.1, height=430, xaxis=dict(tickformat=".0%"), yaxis=dict(autorange="reversed", automargin=True),
+                  margin=dict(l=170))
+fig.show()
+```

@@ -1,0 +1,142 @@
+---
+title: "Données"
+---
+
+```{python}
+import pandas as pd
+import plotly.graph_objects as go
+from _commun import DATASET, RACINE, SERIE, MUET, ENCRE_2, lire, tableau
+
+d = pd.read_parquet(DATASET)
+ev = pd.read_csv(RACINE / "config" / "evenements.csv", parse_dates=["date"])
+part = pd.read_csv(RACINE / "outputs" / "metriques" / "t2_poids_pays.csv", index_col=0)
+```
+
+Cette page présente les principales séries utilisées pour expliquer le prix du cacao. Le projet en compte 28 au total, regroupées en 8 familles. Toutes sont alignées sur les jours de cotation du cacao, du 3 janvier 2005 au 3 novembre 2026, soit 5 489 séances.
+
+**Règle de base :** une donnée n'est utilisée qu'**après sa publication**. Par exemple, la pluie d'octobre n'est publiée que fin novembre : le modèle ne la voit qu'à partir de cette date. Sans cette règle, le modèle « tricherait » en utilisant des informations que personne ne connaissait encore.
+
+## Le prix du cacao
+
+**Ce qu'on regarde.** Le contrat à terme de cacao coté à New York (ICE, symbole Yahoo CC=F), en dollars par tonne. Un contrat à terme est un engagement à acheter ou vendre du cacao à une date future. Son prix reflète ce que le marché anticipe sur l'offre et la demande.
+
+**Pourquoi c'est intéressant.** Pendant près de vingt ans, le cours est resté entre 2 000 et 4 000 $/t, puis il a dépassé 10 000 $/t en 2024. Le projet cherche à savoir si des facteurs comme la météo, les coûts, les investisseurs ou la géopolitique permettaient d'anticiper ces mouvements.
+
+```{python}
+fin = d.index[-1]
+fig = go.Figure()
+fig.add_scatter(x=d.index, y=d["cacao_close"], mode="lines", line=dict(width=2, color=SERIE[0]), name="CC=F",
+                hovertemplate="%{x|%d/%m/%Y}<br>%{y:,.0f} $/t<extra></extra>")
+for i, e in ev.reset_index(drop=True).iterrows():
+    proche = d.index[d.index.get_indexer([e["date"]], method="nearest")[0]]
+    y = d.loc[proche, "cacao_close"]
+    fig.add_scatter(x=[proche], y=[y], mode="markers+text", text=[str(i + 1)], textposition="top center",
+                    textfont=dict(color=ENCRE_2, size=12), marker=dict(size=11, color=SERIE[1], line=dict(width=2, color="white")),
+                    showlegend=False, hovertemplate=f"<b>{i + 1}. {e['date']:%d/%m/%Y}</b><br>{e['evenement']}<extra></extra>")
+boutons = []
+for nom, debut in (("Depuis 2005", d.index[0]), ("5 ans", fin - pd.DateOffset(years=5)), ("2 ans", fin - pd.DateOffset(years=2))):
+    z = d.loc[debut:, "cacao_close"]
+    boutons.append(dict(label=nom, method="relayout", args=[{"xaxis.range": [debut, fin], "yaxis.range": [0, z.max() * 1.1]}]))
+fig.update_layout(title="Contrat à terme de cacao (CC=F), en dollars par tonne", showlegend=False, height=460, separators=", ",
+                  yaxis=dict(range=[0, d["cacao_close"].max() * 1.1], title="$/t"),
+                  updatemenus=[dict(type="buttons", direction="right", x=0, y=1.0, xanchor="left", yanchor="bottom",
+                                    active=0, buttons=boutons, bgcolor="white", bordercolor="#c3c2b7", font=dict(size=11))],
+                  margin=dict(t=100))
+fig.show()
+```
+
+Les points numérotés sont des événements vérifiés auprès de sources de premier plan. Survolez-les pour le détail, ou consultez le tableau ci-dessous.
+
+```{python}
+t = ev.reset_index(drop=True).assign(n=lambda x: x.index + 1, date=lambda x: x["date"].dt.strftime("%d/%m/%Y"))
+t["statut"] = t["statut"].map({"date_confirmee_par_url": "Date confirmée", "mois_confirme_jour_a_verifier": "Mois confirmé, jour à vérifier",
+                               "date_confirmee_par_source_officielle": "Date confirmée (source officielle)",
+                               "date_confirmee_niveau_repris_en_septembre_par_bloomberg": "Date confirmée"}).fillna(t["statut"])
+tableau(t[["n", "date", "evenement", "source", "statut"]].rename(columns={"n": "N°", "date": "Date", "evenement": "Événement",
+                                                                          "source": "Source", "statut": "Vérification"}))
+```
+
+**Un piège technique.** CC=F enchaîne les contrats : quand une échéance expire, Yahoo passe à la suivante, et le prix peut sauter sans vrai mouvement du marché, jusqu'à 30 % en 2024. Les modèles en tiennent compte grâce à une **lecture de contrôle**, qui retire ces sauts (page [Méthode](methode.qmd)).
+
+## La pluie en Côte d'Ivoire et au Ghana
+
+**Pourquoi la pluie.** Le cacao vient surtout d'Afrique de l'Ouest. Parmi les 9 pays suivis, la Côte d'Ivoire et le Ghana représentent ensemble environ la moitié de la production (FAOSTAT, poids utilisés dans le projet). Le cacaoyer a besoin de pluies régulières :
+
+- une **sécheresse** réduit la floraison et la taille des fèves ;
+- un **excès d'humidité** favorise les maladies, comme la pourriture des cabosses.
+
+Une mauvaise saison des pluies peut donc réduire la récolte des mois suivants, et faire monter le prix si le marché ne l'avait pas anticipée.
+
+```{python}
+dernier = part.iloc[-1]
+print(f"Poids dans la production des 9 pays suivis ({part.index[-1]}) : Côte d'Ivoire {dernier['CIV']:.0%}, Ghana {dernier['GHA']:.0%}, "
+      f"Indonésie {dernier['IDN']:.0%}, Équateur {dernier['ECU']:.0%}.")
+```
+
+**Comment lire le graphique.** Chaque courbe compare la pluie des 3 derniers mois à la normale des mêmes mois sur 1991-2004. L'écart est exprimé en **écarts-types**, une mesure de l'écart habituel d'une année à l'autre.
+
+- **0** : pluie normale ;
+- **+1** : nettement plus de pluie que d'habitude ;
+- **−1** : nettement moins ;
+- au-delà de **±2** : situation rare.
+
+```{python}
+fig = go.Figure()
+for i, (pays, nom) in enumerate([("CIV", "Côte d'Ivoire"), ("GHA", "Ghana")]):
+    s = d[f"CHIRPS_ANOM3M_{pays}"]
+    fig.add_scatter(x=s.index, y=s, mode="lines", name=nom, line=dict(width=2, color=SERIE[i]),
+                    hovertemplate=f"{nom}<br>%{{x|%m/%Y}} : %{{y:.2f}} écart-type<extra></extra>")
+fig.add_hrect(y0=0, y1=6, fillcolor=SERIE[0], opacity=0.04, line_width=0)
+fig.add_annotation(x=d.index[60], y=4.6, text="Plus humide que la normale", showarrow=False, xanchor="left", font=dict(color=ENCRE_2))
+fig.add_annotation(x=d.index[60], y=-2.6, text="Plus sec que la normale", showarrow=False, xanchor="left", font=dict(color=ENCRE_2))
+fig.add_hline(y=0, line=dict(color=MUET, width=1))
+fig.update_layout(title="Pluie des 3 derniers mois, écart à la normale (source : CHIRPS)", height=400, separators=", ",
+                  yaxis=dict(title="Écarts-types", range=[-3, 5.2]))
+fig.show()
+```
+
+**Ce qu'on observe.**
+
+- Les deux pays évoluent souvent ensemble, puisqu'ils sont voisins.
+- Le début de 2026 est très au-dessus de la normale, entre +3 et +4,7 écarts-types. Attention toutefois : de décembre à mars, c'est la saison sèche. Les pluies normales y sont faibles, donc quelques averses suffisent à produire un écart important.
+- **Ce que le projet en conclut :** ces écarts de pluie n'ont pas amélioré la prévision du prix (page [Résultats](resultats.qmd)). Soit l'information est déjà intégrée par le marché quand elle est publiée, soit l'effet sur la récolte est trop indirect pour être capté.
+
+## El Niño
+
+**De quoi il s'agit.** El Niño est un réchauffement périodique de l'océan Pacifique tropical, qui revient tous les 2 à 7 ans environ. Il dérègle la météo de nombreuses régions. Il est souvent associé à une saison sèche plus marquée en Afrique de l'Ouest. **La Niña** est le phénomène inverse : un refroidissement du Pacifique.
+
+**Comment lire le graphique.** L'indice ONI de la NOAA mesure l'écart de température de l'océan, en degrés.
+
+- **Au-dessus de +0,5 °C :** épisode El Niño.
+- **Sous −0,5 °C :** épisode La Niña.
+
+Selon nos données, les épisodes les plus forts depuis 2005 sont ceux de 2015-2016, avec un maximum de +2,6 °C, et de 2023-2024, avec environ +2,0 °C. Un nouvel épisode fort apparaît en 2026.
+
+```{python}
+s = d["ONI"]
+fig = go.Figure()
+fig.add_scatter(x=s.index, y=s, mode="lines", line=dict(width=2, color=SERIE[0]), name="ONI",
+                hovertemplate="%{x|%m/%Y} : %{y:+.2f} °C<extra></extra>")
+fig.add_hrect(y0=0.5, y1=3, fillcolor=SERIE[1], opacity=0.08, line_width=0)
+fig.add_hrect(y0=-3, y1=-0.5, fillcolor=SERIE[0], opacity=0.08, line_width=0)
+fig.add_annotation(x=s.index[30], y=2.6, text="Zone El Niño (au-dessus de +0,5 °C)", showarrow=False, font=dict(color=ENCRE_2), xanchor="left")
+fig.add_annotation(x=s.index[30], y=-2.6, text="Zone La Niña (sous −0,5 °C)", showarrow=False, font=dict(color=ENCRE_2), xanchor="left")
+fig.update_layout(title="Indice océanique El Niño (ONI, NOAA), en °C", height=380, showlegend=False, separators=", ",
+                  yaxis=dict(range=[-3, 3], title="°C"))
+fig.show()
+```
+
+**Ce que le projet en conclut :** comme pour la pluie, l'indice El Niño n'a pas permis de mieux prévoir le prix. Les épisodes sont annoncés des mois à l'avance par les agences météo : le marché les anticipe probablement.
+
+## Inventaire des données
+
+Le script `scripts/34_inventaire_donnees.py` vérifie que chaque fichier attendu est présent et complet.
+
+```{python}
+inv = lire("inventaire_donnees.csv")
+inv["famille"] = inv["famille"].str.replace("_", " ")
+tableau(inv[["famille", "donnee", "attendu", "present", "etat"]].rename(columns={
+    "famille": "Famille", "donnee": "Donnée", "attendu": "Attendu", "present": "Présent", "etat": "État"}))
+```
+
+Seuls les incendies 2026 manquent, faute d'une clé d'accès gratuite à la base FIRMS de la NASA. Le jeu de données final compte 328 colonnes.

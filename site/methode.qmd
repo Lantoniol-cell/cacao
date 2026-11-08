@@ -1,0 +1,62 @@
+---
+title: "Méthode et limites"
+---
+
+## Un protocole fixé avant les résultats
+
+Toutes les règles ont été écrites dans `protocole.md` et validées le 7 novembre 2026, **avant** le premier modèle à facteurs : cibles, horizons, réglages, benchmark, critère de réussite, mesure de l'impact des familles. Les seules analyses ajoutées ensuite sont signalées comme exploratoires.
+
+| Élément | Choix |
+|---|---|
+| Cibles | Sens du rendement à 1, 5, 20, 60 et 120 séances ; volatilité réalisée à 5, 20, 60 et 120 séances |
+| Validation | Une année de test à la fois, de 2010 à 2026, entraînement sur tout le passé |
+| Purge | h séances entre l'entraînement et le test, égale à l'horizon |
+| Modèles | Gradient Boosting (principal) et Random Forest (contrôle), réglages fixés, `random_state=42` |
+| Benchmark | Meilleur modèle sans facteurs : majorité, persistance, momentum, logistique sur le prix passé ; pour la volatilité, persistance ou moyenne passée |
+| Réussite | Battre le benchmark sur 2010-2026 **et** en lecture de contrôle, avec un intervalle à 99,4 % qui exclut zéro |
+| Lecture de contrôle | Sans fenêtres de passage d'échéance jusqu'à 20 séances ; jours de saut neutralisés à 60 et 120 séances |
+| Impact des familles | Retrait d'une famille à la fois (principal), SHAP (secondaire) ; pas de classement si le benchmark n'est pas battu |
+
+## Les données et leur délai de publication
+
+Une donnée n'entre dans le modèle qu'une fois publiée, **strictement avant** la séance. C'est la règle qui évite le *look-ahead bias*.
+
+| Famille | Sources | Délai appliqué |
+|---|---|---|
+| Marché et finance | Yahoo Finance (CC=F, dollar, taux, actions du chocolat), CFTC | Clôture précédente ; CFTC le vendredi |
+| Climat | ERA5 (pluie quotidienne), CHIRPS (pluie mensuelle), NASA POWER (température, humidité, sol, rayonnement, vent), ONI | ERA5 7 jours ; CHIRPS le 25 du mois suivant ; NASA 3 à 6 jours ; ONI environ 45 jours |
+| Prévisions météo | GEFS de la NOAA, jours 2 à 10, corrigées par pays face à CHIRPS | Séance suivant l'émission |
+| Biodiversité | Incendies FIRMS (NASA), pesticides et azote FAOSTAT, rendement FAOSTAT | 1 jour ; FAOSTAT au 1er janvier N+2 |
+| Production et offre | Production FAOSTAT | 1er janvier N+2 |
+| Coûts de production | Pétrole, gaz, change (cedi, roupie, naira, euro), engrais (Banque mondiale) | Clôture précédente ; prix mensuels 5 jours après le mois |
+| Investisseurs et biais | Positions CFTC, Google Trends, presse GDELT | Trends 5 jours après le mois ; GDELT 1 jour |
+| Géopolitique | Indice GPR (Caldara et Iacoviello), événements GDELT | GPR quotidien 7 jours ; GDELT 1 jour |
+| Demande et substituts | Sucre, huile de palme, café robusta, actions du chocolat | Comme le marché |
+
+Les données météo portent sur **349 points** des zones de cacao, repérés avec MapSPAM 2010. Ils sont pondérés dans chaque pays, puis entre pays par les parts de production FAOSTAT de l'année N-2.
+
+## Limites
+
+- **Sauts d'échéance.** CC=F change de contrat : les sauts de prix, jusqu'à 30 % en 2024, sont repérés après coup. La lecture de contrôle les traite, sans les supprimer.
+- **Peu d'observations indépendantes à long terme.** Environ 70 fenêtres indépendantes à 60 séances et 35 à 120 séances sur 2010-2026.
+- **Données révisées.** FAOSTAT est pris dans sa version actuelle, pas celle connue à l'époque. Les reprévisions GEFS 2005-2019 ont été produites après coup.
+- **Sources météo imparfaites.** La pluie NASA a un biais humide en 2020-2023, et l'ERA5 dérive face à CHIRPS en Afrique de l'Ouest. La correction de la température GEFS hérite du biais de la NASA.
+- **Délais de publication** en partie supposés (FIRMS, ONI, Google Trends).
+- **Données absentes.** Pas de série de stocks : les stocks certifiés ICE sont payants, ou disponibles via Bloomberg. Rien non plus sur l'empoisonnement des sols, le swollen shoot ou l'orpaillage. Les incendies 2026 manquent.
+- **Prix uniquement.** La conclusion porte sur la prévision du prix et de la volatilité, pas sur l'effet causal des facteurs sur la production.
+
+## Extensions
+
+- Stocks certifiés ICE, à exporter depuis Bloomberg.
+- Poids MapSPAM 2020 corrigé et poids ICCO.
+- Prévisions saisonnières, au lieu de prévisions à 10 jours.
+- Données de positions plus fines et données d'options pour la volatilité implicite.
+
+## Usage de l'intelligence artificielle
+
+Ce projet a été mené avec **Claude Code** (Anthropic), qui a écrit les scripts de collecte, de nettoyage et de modélisation, ainsi que ce site. Chaque choix de méthode a été validé à la main avant d'être appliqué : sources de pluie, protocole, traitement des ruptures GEFS, pistes exploratoires. Chaque étape est consignée dans `carnet_de_bord.md`, avec un journal d'utilisation de l'IA. Règles imposées à l'IA :
+
+- ne jamais inventer de données ;
+- recouper tout événement daté auprès d'une source de premier plan ;
+- n'utiliser une donnée qu'une fois publiée ;
+- fixer les règles du modèle avant de voir les résultats.

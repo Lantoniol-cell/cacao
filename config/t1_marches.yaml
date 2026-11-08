@@ -1,0 +1,27 @@
+# Thematique 1 : series Yahoo Finance. Debut commun : 2005.
+debut: "2005-01-01"
+series:
+  cacao:
+    CC=F: "Cacao, contrat a terme continu ICE US"
+  dollar_taux:
+    DX-Y.NYB: "Indice du dollar US"
+    ^TNX: "Rendement du Tresor US a 10 ans"
+    ^IRX: "Rendement des bons du Tresor US a 13 semaines"
+  energie:
+    CL=F: "Petrole WTI, contrat a terme continu"
+    NG=F: "Gaz naturel Henry Hub, contrat a terme continu"
+  change:
+    EURUSD=X: "Euro en dollars, proxy du franc CFA"
+    EURXOF=X: "Euro en franc CFA, parite attendue constante"
+    GHS=X: "Dollars en cedi ghaneen"
+    IDR=X: "Dollars en roupie indonesienne"
+    NGN=X: "Dollars en naira nigerian"
+    BRL=X: "Dollars en real bresilien"
+    PEN=X: "Dollars en sol peruvien"
+  chocolatiers:
+    BARN.SW: "Barry Callebaut"
+    HSY: "Hershey"
+    MDLZ: "Mondelez"
+    NESN.SW: "Nestle"
+    LISN.SW: "Lindt, action nominative"
+    LISP.SW: "Lindt, bon de participation"

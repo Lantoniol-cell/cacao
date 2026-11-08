@@ -1,0 +1,42 @@
+project:
+  type: website
+  output-dir: ../docs  # dossier publie par GitHub Pages (branche main, dossier /docs)
+
+lang: fr
+
+website:
+  title: "Cacao : quels facteurs pèsent sur le prix ?"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Accueil
+      - href: marche.qmd
+        text: Marché du jour
+      - href: donnees.qmd
+        text: Données
+      - href: resultats.qmd
+        text: Résultats
+      - href: familles.qmd
+        text: Familles de facteurs
+      - href: exploratoire.qmd
+        text: Pistes exploratoires
+      - href: impact.qmd
+        text: Météo et production
+      - href: methode.qmd
+        text: Méthode et limites
+  page-footer:
+    center: "Projet individuel, cours de machine learning en finance (emlyon). Analyse menée avec l'aide de Claude Code ; détails dans la page Méthode."
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+    code-summary: "Voir le code"
+    fig-responsive: true
+
+execute:
+  freeze: auto
+  warning: false
+
+jupyter: python3

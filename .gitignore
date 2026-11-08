@@ -1,0 +1,19 @@
+# Environnement
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+.vscode/
+.claude/
+
+# Donnees : jamais dans le depot (8 Go de donnees brutes, MapSPAM 189 Go).
+# Elles se reconstruisent avec les scripts de collecte (scripts/01 a 32).
+data/
+MapSPAM zones de production/
+Consignes du projet/
+
+# Sorties Quarto intermediaires (le site publie est dans docs/)
+site/_site/
+site/.quarto/
+site/_archive/

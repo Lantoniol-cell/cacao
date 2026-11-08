@@ -1,0 +1,20 @@
+groupe,ticker,description,statut,debut,fin,n_jours,nan_close,min,date_min,max,date_max,n_valeurs_distinctes,plus_grand_saut_pct,date_saut,ecart_max_jours
+cacao,CC=F,"Cacao, contrat a terme continu ICE US",ok,2005-01-03,2026-11-03,5489,0,1318.0,2005-08-17,12565.0,2024-12-18,2453,22.9,2024-09-16,5
+dollar_taux,DX-Y.NYB,Indice du dollar US,ok,2005-01-03,2026-11-03,5500,0,71.33,2008-04-22,114.11,2022-09-27,2678,2.7,2009-03-18,5
+dollar_taux,^TNX,Rendement du Tresor US a 10 ans,ok,2005-01-03,2026-11-03,5489,0,0.499,2020-03-09,5.311,2026-10-05,2909,49.9,2020-03-10,5
+dollar_taux,^IRX,Rendement des bons du Tresor US a 13 semaines,ok,2005-01-03,2026-11-03,5489,0,-0.105,2020-03-26,5.348,2023-10-06,1471,1214.3,2008-09-19,5
+energie,CL=F,"Petrole WTI, contrat a terme continu",ok,2005-01-03,2026-11-03,5493,0,-37.63,2020-04-20,145.29,2008-07-03,3910,306.0,2020-04-20,5
+energie,NG=F,"Gaz naturel Henry Hub, contrat a terme continu",ok,2005-01-03,2026-11-03,5494,0,1.482,2020-06-25,15.378,2005-12-13,3386,47.5,2026-01-29,5
+change,EURUSD=X,"Euro en dollars, proxy du franc CFA",ok,2005-01-03,2026-11-04,5665,0,0.9596,2022-09-28,1.5988,2008-04-22,4724,17.3,2008-12-08,18
+change,EURXOF=X,"Euro en franc CFA, parite attendue constante",ok,2006-05-16,2026-11-04,5302,0,629.957,2006-05-16,656.0,2023-03-07,6,3.0,2026-11-04,26
+change,GHS=X,Dollars en cedi ghaneen,ok,2007-07-11,2026-11-04,5016,0,0.9022,2007-07-11,573.0,2020-03-31,3282,10036.5,2011-07-20,6
+change,IDR=X,Dollars en roupie indonesienne,ok,2005-01-03,2026-11-04,5664,0,888.11,2010-11-01,18190.3008,2026-06-09,4623,902.9,2010-11-02,26
+change,NGN=X,Dollars en naira nigerian,ok,2005-01-03,2026-11-04,5678,0,1.0,2015-07-29,1696.2,2024-11-25,2849,19780.0,2015-07-30,5
+change,BRL=X,Dollars en real bresilien,ok,2006-03-24,2026-11-04,5337,0,1.5337,2011-07-27,6.3,2025-01-02,4716,10.5,2008-10-09,26
+change,PEN=X,Dollars en sol peruvien,ok,2005-01-03,2026-11-04,5687,0,0.7844,2010-11-09,4.136,2021-10-01,3561,256.6,2010-11-10,5
+chocolatiers,BARN.SW,Barry Callebaut,ok,2005-01-03,2026-11-02,5506,1,275.5,2005-03-17,2376.0,2021-08-18,1998,21.5,2025-04-10,6
+chocolatiers,HSY,Hershey,ok,2005-01-03,2026-11-03,5494,0,30.75,2009-03-10,276.35,2023-05-01,4394,16.8,2016-06-30,5
+chocolatiers,MDLZ,Mondelez,ok,2005-01-03,2026-11-03,5494,0,21.0,2009-03-05,78.36,2023-05-11,2971,34.1,2012-10-02,5
+chocolatiers,NESN.SW,Nestle,ok,2005-01-03,2026-11-02,5506,1,29.9,2005-01-05,129.5,2022-01-04,2716,9.5,2007-08-15,6
+chocolatiers,LISN.SW,"Lindt, action nominative",ok,2005-01-03,2026-11-02,5506,1,16200.0,2005-01-10,134800.0,2025-07-21,2924,10.3,2008-12-03,6
+chocolatiers,LISP.SW,"Lindt, bon de participation",ok,2005-01-03,2026-11-02,5506,1,1500.0,2009-03-30,13650.0,2025-06-18,2546,10.3,2026-03-10,6

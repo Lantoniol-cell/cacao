@@ -1,0 +1,248 @@
+---
+title: "Marché du cacao"
+format:
+  dashboard:
+    orientation: rows
+    scrolling: true
+execute:
+  freeze: false
+---
+
+```{python}
+#| include: false
+import json
+from datetime import datetime
+
+import pandas as pd
+import plotly.graph_objects as go
+from IPython.display import HTML, Markdown
+from _commun import RACINE, SERIE, MUET, ENCRE_2
+
+LIVE = RACINE / "data" / "live"
+etat = json.loads((LIVE / "indicateurs.json").read_text(encoding="utf-8"))
+h = pd.read_parquet(LIVE / "indicateurs_historique.parquet")
+nouvelles = json.loads((LIVE / "actualites.json").read_text(encoding="utf-8"))
+r = etat["resume"]
+har = etat["har"]
+date_cours = pd.Timestamp(etat["date_cours"]).strftime("%d/%m/%Y")
+date_ind = pd.Timestamp(etat["date_indicateurs"]).strftime("%d/%m/%Y")
+
+
+def nombre(x, d=0):
+    """Format francais : espace pour les milliers, virgule decimale, vrai signe moins."""
+    return f"{x:,.{d}f}".replace(",", " ").replace(".", ",").replace("-", "−")
+
+
+def pct(x, d=0, signe=False):
+    return (f"{x:+.{d}f}" if signe else f"{x:.{d}f}").replace(".", ",").replace("-", "−") + " %"
+
+
+def note(texte):
+    return f'<p style="color:{ENCRE_2};font-size:.88em;margin:.6em .4em 0">{texte}</p>'
+
+
+def afficher(fig, hauteur, premier=False, explication="", etiquettes=True):
+    """Figure en largeur 100 % de la carte, a hauteur fixe, suivie d'une explication.
+
+    La legende Plotly est tronquee dans les cartes du tableau de bord : chaque courbe porte
+    donc son nom en etiquette, au bout de la ligne, en encre secondaire.
+    """
+    for t in (fig.data if etiquettes else []):
+        if t.type == "scatter" and len(t.x):
+            fig.add_annotation(x=t.x[-1], y=t.y[-1], text=t.name, showarrow=False, xanchor="left", xshift=6,
+                               font=dict(size=11, color=ENCRE_2))
+    return HTML(fig.to_html(full_html=False, include_plotlyjs="cdn" if premier else False,
+                            default_width="100%", default_height=f"{hauteur}px", config={"responsive": True})
+                + (note(explication) if explication else ""))
+
+
+MISE_EN_PAGE = dict(autosize=True, showlegend=False, separators=", ", margin=dict(t=40, b=40, l=60, r=95))
+```
+
+## Row {height=125px}
+
+```{python}
+Markdown("**À quoi sert cette page ?** Suivre chaque jour le contrat à terme de cacao (CC=F, en dollars par tonne) : "
+         "son dernier cours, l'agitation du marché attendue pour les prochaines semaines, et l'actualité. "
+         "Les chiffres sont recalculés chaque soir. Les prévisions portent sur **l'ampleur** des mouvements, pas sur leur sens : "
+         "le projet a montré que le sens du prix n'est pas prévisible avec nos données. **Outil pédagogique, pas un conseil en investissement.**")
+```
+
+## Row {height=130px}
+
+```{python}
+#| content: valuebox
+#| title: "Dernier cours ($/t)"
+dict(color="light", value=nombre(r["dernier"]) + (" (provisoire)" if r["provisoire"] else ""))
+```
+
+```{python}
+#| content: valuebox
+#| title: "Variation sur la séance"
+dict(color="light", value=pct(r["variation_pct"], 2, signe=True))
+```
+
+```{python}
+#| content: valuebox
+#| title: "Agitation prévue, 5 prochaines séances"
+dict(color="light", value=pct(har["5"]["prevision"] * 100))
+```
+
+```{python}
+#| content: valuebox
+#| title: "Agitation prévue, 20 prochaines séances"
+dict(color="light", value=pct(har["20"]["prevision"] * 100))
+```
+
+```{python}
+#| content: valuebox
+#| title: "État du marché"
+dict(color="light", value="Agité" if etat["regime_agite"] else "Calme")
+```
+
+## Row {height=120px}
+
+```{python}
+Markdown(f"Séance du **{date_cours}** : ouverture {nombre(r['ouverture'])}, plus haut {nombre(r['haut'])}, plus bas {nombre(r['bas'])}, "
+         f"clôture {nombre(r['dernier'])} $/t, volume {nombre(r['volume'])} contrats. Sur un an, le cours est allé de {nombre(r['bas_52s'])} "
+         f"à {nombre(r['haut_52s'])} $/t ({pct(r['variation_1an_pct'], signe=True)}). "
+         f"**L'agitation prévue** est la volatilité annualisée : {pct(har['20']['prevision'] * 100)} signifie que le cours bouge "
+         f"en moyenne d'environ {pct(har['20']['prevision'] * 100 / 252 ** 0.5, 1)} par jour. Source : Yahoo Finance, données retardées.")
+```
+
+## Row {height=640px}
+
+```{python}
+#| title: "Cours depuis 2005 et moyennes mobiles"
+fig = go.Figure()
+_ = fig.add_candlestick(x=h.index, open=h["Open"], high=h["High"], low=h["Low"], close=h["Close"], name="CC=F",
+                        increasing=dict(line=dict(color=SERIE[2], width=1)), decreasing=dict(line=dict(color=SERIE[7], width=1)))
+for k, n in ((0, 60), (1, 120)):
+    _ = fig.add_scatter(x=h.index, y=h[f"mm{n}"], mode="lines", name=f"MM{n}", line=dict(width=2, color=[SERIE[0], SERIE[6]][k]),
+                        hovertemplate=f"Moyenne des {n} dernières séances : %{{y:,.0f}} $/t<extra></extra>")
+# Chaque bouton fixe la periode ET l'echelle verticale, sinon un an de cours serait ecrase par le pic de 2024.
+boutons = []
+fin = h.index[-1]
+for nom, debut in (("6 mois", fin - pd.DateOffset(months=6)), ("1 an", fin - pd.DateOffset(years=1)),
+                   ("5 ans", fin - pd.DateOffset(years=5)), ("Depuis 2005", h.index[0])):
+    z = h.loc[debut:, ["Low", "High", "mm60", "mm120"]]
+    bas, haut = z.min().min(), z.max().max()
+    marge = (haut - bas) * 0.05
+    boutons.append(dict(label=nom, method="relayout",
+                        args=[{"xaxis.range": [debut, fin + pd.Timedelta(days=3)], "yaxis.range": [bas - marge, haut + marge]}]))
+_ = fig.update_layout(MISE_EN_PAGE, xaxis_rangeslider_visible=False, yaxis_title="$/t",
+                      xaxis_range=boutons[1]["args"][0]["xaxis.range"], yaxis_range=boutons[1]["args"][0]["yaxis.range"],
+                      updatemenus=[dict(type="buttons", direction="right", x=0, y=1.08, xanchor="left", yanchor="bottom",
+                                        showactive=True, active=1, buttons=boutons, bgcolor="white", bordercolor="#c3c2b7",
+                                        font=dict(size=11))])
+afficher(fig, 470, premier=True, explication=
+    "Chaque bougie résume une séance : corps vert si le cours finit plus haut qu'il n'a ouvert, rouge sinon ; les traits fins montrent le plus haut "
+    "et le plus bas. <b>MM60</b> est la moyenne des 60 dernières clôtures (environ 3 mois de séances), <b>MM120</b> celle des 120 dernières (environ 6 mois). "
+    "Elles lissent le bruit quotidien : un cours au-dessus de sa moyenne signale une hausse récente, en dessous une baisse récente. "
+    "Les boutons changent la période affichée.")
+```
+
+```{python}
+#| title: "Actualités (Google News)"
+lignes = []
+for a in nouvelles["articles"][:16]:
+    d = datetime.fromisoformat(a["date"]).strftime("%d/%m") if a["date"] else ""
+    titre = a["titre"].replace("<", "&lt;")
+    lignes.append(f'<li style="margin-bottom:.55em"><a href="{a["lien"]}" target="_blank" rel="noopener">{titre}</a>'
+                  f'<br><span style="color:{MUET};font-size:.85em">{a["source"]} · {d} · {a["langue"].upper()}</span></li>')
+HTML(note("Derniers articles sur le cacao, en français et en anglais. Seuls le titre, la source et le lien sont repris : "
+          "cliquez pour lire l'article sur le site d'origine.")
+     + '<ul style="list-style:none;padding-left:0;font-size:.92em;margin-top:.8em">' + "".join(lignes) + "</ul>"
+     + f'<p style="color:{MUET};font-size:.8em">Lus le {pd.Timestamp(etat["maj"]).strftime("%d/%m/%Y à %H:%M")}.</p>')
+```
+
+## Row {height=580px}
+
+```{python}
+#| title: "Écart du cours à ses moyennes mobiles, 2 ans"
+deux_ans = h.loc[h.index > h.index[-1] - pd.Timedelta(days=730)]
+fig = go.Figure()
+for k, n in ((0, 60), (1, 120)):
+    _ = fig.add_scatter(x=deux_ans.index, y=deux_ans[f"ecart_mm{n}_pct"], mode="lines", name=f"MM{n}",
+                        line=dict(width=2, color=[SERIE[0], SERIE[6]][k]),
+                        hovertemplate=f"%{{x|%d/%m/%Y}}<br>Écart à la MM{n} : %{{y:+.1f}} %<extra></extra>")
+_ = fig.add_hline(y=0, line=dict(color=MUET, width=1))
+_ = fig.update_layout(MISE_EN_PAGE, yaxis_title="% au-dessus (+) ou au-dessous (−)", margin=dict(t=10, b=40, l=60, r=95))
+afficher(fig, 360, explication=
+    f"De combien le cours est au-dessus ou au-dessous de sa moyenne. Aujourd'hui : {pct(etat['ecart_mm60_pct'], 1, signe=True)} "
+    f"face à la MM60, {pct(etat['ecart_mm120_pct'], 1, signe=True)} face à la MM120. Un écart très positif montre une flambée récente, "
+    "un écart très négatif une chute récente. C'est une description, pas une prévision : dans le projet, cet écart tend à se réduire, "
+    "mais surtout parce que la moyenne rattrape le cours avec retard.")
+```
+
+```{python}
+#| title: "État du marché : agitation sur 60 séances, 2 ans"
+fig = go.Figure()
+_ = fig.add_scatter(x=deux_ans.index, y=deux_ans["vol60"], mode="lines", name="Agitation", line=dict(width=2, color=SERIE[0]),
+                    hovertemplate="%{x|%d/%m/%Y}<br>Volatilité 60 séances : %{y:.0%}<extra></extra>")
+_ = fig.add_scatter(x=deux_ans.index, y=deux_ans["seuil"], mode="lines", name="Seuil", line=dict(width=2, color=MUET, dash="dash"),
+                    hovertemplate="Seuil : %{y:.0%}<extra></extra>")
+_ = fig.update_layout(MISE_EN_PAGE, yaxis=dict(tickformat=".0%"), margin=dict(t=10, b=40, l=60, r=95))
+afficher(fig, 360, explication=
+    f"La courbe bleue mesure l'agitation des 60 dernières séances (volatilité annualisée, aujourd'hui {pct(etat['vol60'] * 100)}). "
+    f"Le pointillé est le seuil des 20 % de périodes les plus agitées depuis 2005 ({pct(etat['seuil_regime'] * 100)}). "
+    "Au-dessus du seuil, le marché est dit <b>agité</b>. Depuis 2024, il y est presque en permanence, contre environ une séance sur huit avant.")
+```
+
+## Row {height=900px}
+
+```{python}
+#| title: "21 ans de cours : l'agitation prévue a-t-elle tenu ses promesses ?"
+from plotly.subplots import make_subplots
+
+M = RACINE / "outputs" / "metriques"
+tun = pd.read_parquet(M / "tunnel_har20.parquet").dropna(subset=["date_vise"]).set_index("date_vise")
+couv = pd.read_csv(M / "tunnel_couverture.csv").set_index("periode")
+proba = pd.read_parquet(M / "modele_predictions.parquet")["sens_20_brute_gradient_boosting"].dropna()
+cours = pd.read_parquet(RACINE / "data" / "processed" / "dataset_quotidien.parquet", columns=["cacao_close"])["cacao_close"]
+ev = pd.read_csv(RACINE / "config" / "evenements.csv", parse_dates=["date"])
+
+fig = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.76, 0.24], vertical_spacing=0.05)
+_ = fig.add_vrect(x0="2024-01-01", x1=cours.index[-1], fillcolor=SERIE[1], opacity=0.06, line_width=0)
+for k, nom in (("haut_1", "Haut du tunnel"), ("bas_1", "Bas du tunnel")):
+    _ = fig.add_scatter(x=tun.index, y=tun[k], mode="lines", line=dict(width=1.2, color=SERIE[1], dash="dot"), name=nom,
+                        hovertemplate=f"{nom} prévu 20 séances plus tôt : %{{y:,.0f}} $/t<extra></extra>", row=1, col=1)
+_ = fig.add_scatter(x=cours.index, y=cours, mode="lines", line=dict(width=1.6, color=SERIE[0]), name="Cours",
+                    hovertemplate="%{x|%d/%m/%Y}<br>Cours : %{y:,.0f} $/t<extra></extra>", row=1, col=1)
+for i, e in ev.reset_index(drop=True).iterrows():
+    j = cours.index.get_indexer([e["date"]], method="nearest")[0]
+    _ = fig.add_scatter(x=[cours.index[j]], y=[cours.iloc[j]], mode="markers+text", text=[str(i + 1)], textposition="top center",
+                        textfont=dict(size=11, color=ENCRE_2), marker=dict(size=9, color=SERIE[1], line=dict(width=2, color="white")),
+                        hovertemplate=f"<b>{i + 1}. {e['date']:%d/%m/%Y}</b><br>{e['evenement']}<extra></extra>", row=1, col=1)
+_ = fig.add_scatter(x=proba.index, y=proba, mode="lines", line=dict(width=1.2, color=SERIE[6]), name="Probabilité de hausse",
+                    hovertemplate="%{x|%d/%m/%Y}<br>Probabilité de hausse à 20 séances : %{y:.2f}<extra></extra>", row=2, col=1)
+_ = fig.add_hline(y=0.5, line=dict(color=MUET, width=1, dash="dash"), row=2, col=1)
+_ = fig.add_annotation(x="2024-01-01", y=1, yref="y domain", text="Crise 2024-2026", showarrow=False, xanchor="left",
+                       yanchor="top", font=dict(color=ENCRE_2, size=12))
+_ = fig.update_yaxes(type="log", title_text="$/t (échelle log)", tickvals=[1000, 1500, 2000, 3000, 5000, 8000, 12000], row=1, col=1)
+_ = fig.update_yaxes(title_text="Proba. hausse", range=[0, 1], tickvals=[0, 0.5, 1], row=2, col=1)
+_ = fig.update_layout(MISE_EN_PAGE, margin=dict(t=10, b=40, l=70, r=20), hovermode="x unified")
+afficher(fig, 700, etiquettes=False, explication=
+    f"<b>En haut</b>, la ligne bleue est le cours réel. Les pointillés orange forment le <b>tunnel</b> : la fourchette où le cours devait se trouver "
+    f"20 séances plus tard, d'après l'agitation prévue par le modèle HAR, estimé chaque année sur le seul passé (prévision hors échantillon, depuis 2010). "
+    f"La fourchette correspond à ±1 écart-type : le cours devrait y tomber environ 68 % du temps. "
+    f"<b>Résultat :</b> de 2010 à 2023, il y est tombé <b>{couv.loc['2010-2023', 'couverture_1_ecart_type']:.0%}</b> du temps, conforme à l'attendu. "
+    f"Pendant la crise de 2024-2026, seulement <b>{couv.loc['2024-2026', 'couverture_1_ecart_type']:.0%}</b>, alors que le tunnel s'était déjà élargi "
+    f"(±{couv.loc['2024-2026', 'largeur_moyenne_1_pct']:.0f} % en moyenne, contre ±{couv.loc['2010-2023', 'largeur_moyenne_1_pct']:.0f} % avant). "
+    f"Les chocs ont donc dépassé ce que l'agitation passée laissait prévoir. Les points numérotés sont les événements vérifiés de la page Données. "
+    f"<b>En bas</b>, la probabilité de hausse à 20 séances donnée par le modèle à facteurs. Elle est souvent <b>très tranchée</b> "
+    f"(de {proba.min():.2f} à {proba.max():.2f}, moitié des valeurs hors de 0,34-0,71), comme si le modèle était sûr de lui. Pourtant, il ne prévoit "
+    f"pas mieux le sens du prix que le hasard (exactitude équilibrée de 0,51 sur 2010-2026, page Résultats) : c'est un modèle <b>trop confiant</b>, "
+    f"qui a appris des régimes passés qui ne se répètent pas. Le modèle ne prédit pas de niveau de prix, d'où l'absence de « courbe de prix prévu ».")
+```
+
+## Row {height=150px}
+
+```{python}
+Markdown(
+    f"**D'où vient l'agitation prévue ?** D'un modèle simple appelé **HAR** : il prévoit l'agitation des semaines à venir à partir de celle "
+    f"des 5, 20 et 60 dernières séances, réestimé chaque soir sur tout l'historique. C'est le meilleur modèle testé dans le projet : "
+    f"ajouter la météo, les positions des investisseurs ou la presse ne l'améliore pas (page [Pistes exploratoires](exploratoire.qmd)). "
+    f"Pour comparer, l'agitation réellement observée sur les 5 dernières séances est de {pct(har['5']['vol_recente'] * 100)}, "
+    f"et de {pct(har['20']['vol_recente'] * 100)} sur les 20 dernières. Indicateurs calculés à la séance du {date_ind}.")
+```

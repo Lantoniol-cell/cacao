@@ -1,0 +1,125 @@
+---
+title: "Impact de la météo sur la production"
+---
+
+::: {.callout-note}
+## Une analyse complémentaire, exploratoire
+
+La question principale du projet porte sur le **prix**. Cette page pose une autre question : la météo agit-elle sur la **récolte** de cacao ? Les règles ont été écrites dans le protocole (point 12) avant tout calcul.
+:::
+
+```{python}
+import pandas as pd
+import plotly.graph_objects as go
+from _commun import RACINE, SERIE, MUET, ENCRE_2, lire, tableau
+
+panel = pd.read_parquet(RACINE / "data" / "processed" / "impact_panel.parquet")
+coef = lire("impact_coefficients.csv")
+perm = lire("impact_permutation.csv")
+k = lire("impact_courbe.csv")
+NOMS = {"pluie_N": "Pluie de l'année", "pluie_N2": "Pluie de l'année, au carré", "pluie_N1": "Pluie de l'année précédente",
+        "pluie_N12": "Pluie de l'année précédente, au carré", "pluie_lead": "Pluie de l'année suivante (placebo)",
+        "pluie_lead2": "Pluie de l'année suivante, au carré (placebo)", "tmax_N": "Température max. de l'année",
+        "tmax_N1": "Température max. de l'année précédente"}
+```
+
+## Pourquoi cette question
+
+Le projet a montré que la météo n'aide pas à prévoir le **prix** : le marché semble intégrer l'information avant nous. Mais un cacaoyer ne lit pas les marchés. Si la pluie et la chaleur comptent, on devrait voir leur effet directement dans les **quantités récoltées**. Et comme la météo ne dépend pas de la production, un lien mesuré entre les deux peut se lire, avec prudence, comme un **effet de cause à effet**.
+
+## Les données
+
+- **Production :** tonnes de fèves par pays et par an, de 1991 à 2024, dans les 9 pays suivis (FAOSTAT).
+- **Pluie :** total annuel CHIRPS dans les zones de cacao de chaque pays, avec les points pondérés par la carte des cultures MapSPAM, de 1991 à 2025.
+- **Température :** moyenne annuelle des maximums quotidiens (NASA POWER), seulement depuis 2005.
+
+**Pourquoi la production et pas le rendement ?** Le rendement par hectare semblait la cible naturelle. Mais en Côte d'Ivoire, la FAO l'**estime elle-même** 29 années sur 34 : il reste figé vers 500 kg/ha. Il ne contient donc presque aucune information sur la météo. La production, elle, est officielle dans 9 cas sur 10.
+
+```{python}
+f = pd.read_csv(RACINE / "data" / "raw" / "t3_offre" / "faostat_cacao.csv")
+civ = f[(f["Area"] == "Côte d'Ivoire") & (f["Year"] >= 1991)].pivot(index="Year", columns="Element", values="Value")
+fig = go.Figure()
+fig.add_scatter(x=civ.index, y=civ["Production"] / civ["Production"].iloc[0] * 100, mode="lines", name="Production",
+                line=dict(width=2, color=SERIE[0]), hovertemplate="%{x} : production %{y:.0f} (base 100 en 1991)<extra></extra>")
+fig.add_scatter(x=civ.index, y=civ["Yield"] / civ["Yield"].iloc[0] * 100, mode="lines", name="Rendement par hectare",
+                line=dict(width=2, color=SERIE[1]), hovertemplate="%{x} : rendement %{y:.0f} (base 100 en 1991)<extra></extra>")
+fig.update_layout(title="Côte d'Ivoire : production et rendement FAOSTAT, base 100 en 1991", height=360,
+                  yaxis_title="Indice (1991 = 100)")
+fig.show()
+```
+
+La production varie d'une année à l'autre, alors que le rendement publié est presque plat : c'est le signe d'une valeur estimée, pas mesurée.
+
+## La méthode, en simple
+
+On compare chaque pays **à lui-même** :
+
+- une année plus sèche ou plus humide que d'habitude dans ce pays donne-t-elle une récolte inférieure à la tendance de ce pays ?
+- on retire les chocs qui touchent tous les pays la même année, comme la demande mondiale ou les prix ;
+- on retire aussi la croissance de long terme de chaque pays, liée à l'extension des plantations.
+
+La pluie est mesurée en **écarts à la normale du pays** : 0 est une année normale, −1,5 une année nettement sèche, +1,5 une année nettement humide. On teste la pluie de l'année et celle de l'année précédente, car les calendriers de récolte ne suivent pas l'année civile. Un terme « au carré » permet de capter qu'un excès d'eau puisse nuire autant qu'un déficit.
+
+**Avec seulement 9 pays**, les tests habituels sont trop optimistes. On utilise donc :
+
+- un **bootstrap sauvage** : on refait l'estimation en inversant au hasard le signe des écarts de chaque pays, sur les 512 combinaisons possibles ;
+- une **permutation** : on mélange les années de météo à l'intérieur de chaque pays, 2 000 fois, pour voir si le vrai lien fait mieux que le hasard.
+
+## Résultats
+
+```{python}
+p = perm.copy()
+p["modele"] = p["modele"].map({"principal": "Pluie (modèle principal)", "sans_tendances": "Pluie, sans tendances par pays",
+                               "temperature_seule": "Température, en plus de la pluie (2006-2024)"})
+p["Significatif à 5 % ?"] = (p["p_permutation"] < 0.05).map({True: "Oui", False: "Non"})
+tableau(p[["modele", "gain_r2_intra", "seuil_95_permutations", "p_permutation", "Significatif à 5 % ?"]].rename(columns={
+    "modele": "Ce qu'on teste", "gain_r2_intra": "Part des variations expliquée", "seuil_95_permutations": "Seuil du hasard (95 %)",
+    "p_permutation": "p-value"}))
+```
+
+::: {.callout-important}
+## Pas d'effet démontré
+
+Dans le modèle principal, la pluie explique **2,6 %** des variations de production propres à chaque pays. Avec des années tirées au hasard, on obtient autant ou plus dans **16 %** des cas (p = 0,16). L'effet de la pluie annuelle n'est donc **pas distinguable du hasard**, et la température non plus.
+:::
+
+```{python}
+fig = go.Figure()
+for i, (a, nom) in enumerate((("N", "Pluie de l'année"), ("N-1", "Pluie de l'année précédente"))):
+    x = k[k["annee_pluie"] == a]
+    fig.add_scatter(x=x["z"], y=x["effet_pct"], mode="lines", name=nom, line=dict(width=2, color=SERIE[i]),
+                    hovertemplate=f"{nom}<br>Écart de pluie %{{x:+.1f}}<br>Effet estimé %{{y:+.1f}} %<extra></extra>")
+fig.add_hline(y=0, line=dict(color=MUET, width=1))
+fig.add_vline(x=0, line=dict(color=MUET, width=1, dash="dot"))
+fig.update_layout(title="Effet estimé sur la production selon l'écart de pluie (non significatif)", height=380,
+                  xaxis_title="Écart de pluie à la normale du pays (écarts-types)", yaxis_title="Effet sur la production (%)")
+fig.show()
+```
+
+Les courbes donnent l'effet **estimé** : par exemple environ −4 % de production pour une année nettement humide (+1,5). Aucun de ces effets ne passe les tests. Ce sont des ordres de grandeur, pas des résultats.
+
+### Détail des coefficients et des contrôles
+
+```{python}
+c = coef.copy()
+c["Variable"] = c["variable"].map(NOMS)
+c["Modèle"] = c["modele"].map({"principal": "Principal", "placebo_N+1": "Placebo (année suivante)",
+                               "officiel_seulement": "Données officielles seulement", "sans_indonesie": "Sans l'Indonésie",
+                               "sans_tendances": "Sans tendances par pays", "temperature_2006_2024": "Avec température (2006-2024)"})
+tableau(c[["Modèle", "Variable", "coef", "se_cr1", "p_bootstrap", "n"]].rename(columns={
+    "coef": "Coefficient", "se_cr1": "Erreur type", "p_bootstrap": "p-value (bootstrap)", "n": "Observations"}), 3)
+```
+
+- **Placebo :** la pluie de l'année suivante n'« explique » pas la récolte (p = 0,74 et 0,36). C'est attendu, et c'est rassurant sur la méthode.
+- **Le seul signal approchant** est la pluie de l'année précédente, au carré (p entre 0,05 et 0,07 selon les variantes) : une année précédente très sèche ou très humide irait avec une récolte légèrement plus forte. Ce n'est pas significatif à 5 %, et le sens n'a pas d'explication agronomique simple. On ne l'interprète pas.
+
+## Pourquoi un résultat nul, et ce qu'il faudrait pour aller plus loin
+
+Un résultat nul ne prouve pas que la météo est sans effet. Il dit que **ces données ne permettent pas de le mesurer**. Quatre raisons probables :
+
+1. **Une pluie annuelle et nationale est trop grossière.** Ce qui compte pour le cacaoyer, c'est la répartition des pluies dans l'année, notamment la longueur de la saison sèche, et pas le total.
+2. **La production FAOSTAT est imparfaite.** Elle est souvent révisée et parfois reprise d'autres organismes. Elle ne suit pas la campagne de récolte, qui va d'octobre à septembre.
+3. **Peu d'observations indépendantes** : 9 pays, environ 33 ans.
+4. **D'autres facteurs dominent** : maladies (swollen shoot), vieillissement des vergers, prix payés aux planteurs, contrebande entre pays voisins.
+
+**Extensions possibles :** des indicateurs de saison (pluie de la saison sèche, nombre de jours de déficit), des données de production par région ou par campagne (arrivées de fèves dans les ports ivoiriens, chiffres trimestriels de l'ICCO), et des températures extrêmes plutôt que des moyennes. Ces analyses seraient décidées après ce premier résultat : il faudrait les présenter comme exploratoires.

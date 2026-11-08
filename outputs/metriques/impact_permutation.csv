@@ -1,0 +1,4 @@
+modele,variables_testees,gain_r2_intra,p_permutation,seuil_95_permutations
+principal,pluie_N+pluie_N2+pluie_N1+pluie_N12,0.026278190186710265,0.1635,0.03826182528536092
+sans_tendances,pluie_N+pluie_N2+pluie_N1+pluie_N12,0.01521146990161905,0.4545,0.038846866979303014
+temperature_seule,tmax_N+tmax_N1,0.027171660221988955,0.174,0.047169338621988424

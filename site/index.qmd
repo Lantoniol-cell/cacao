@@ -1,0 +1,60 @@
+---
+title: "Quel facteur pèse le plus sur le prix du cacao ?"
+subtitle: "Prévoir la direction et la volatilité du contrat à terme de cacao (CC=F), 2005-2026"
+---
+
+## Le contexte
+
+Le cacao est produit surtout en Afrique de l'Ouest : parmi les 9 pays suivis ici, la Côte d'Ivoire et le Ghana font environ la moitié de la production (FAOSTAT). Il s'échange sur des marchés à terme, à New York et à Londres. Son prix dépend donc de la météo des zones de culture, des maladies des arbres, des politiques des pays producteurs, des coûts, de la demande des chocolatiers et des paris des investisseurs.
+
+## La question
+
+Le cacao a connu en 2024 une crise historique : le contrat à terme a dépassé 10 000 dollars la tonne pour la première fois le 26 mars 2024 ([Bloomberg](https://www.bloomberg.com/news/articles/2024-03-26/cocoa-soars-past-10-000-pummeling-chocolate-and-candy-makers)). Ce projet se demande quelle famille de facteurs apporte le plus d'information pour prévoir le cacao, **hors échantillon** :
+
+- le sens du prix à 1, 5, 20, 60 et 120 séances ;
+- sa volatilité à 5, 20, 60 et 120 séances.
+
+Huit familles sont testées : climat, géopolitique, biodiversité, coûts de production, production et offre, marché et finance, investisseurs et biais, demande et substituts.
+
+## La réponse courte
+
+::: {.callout-important}
+## Aucune famille de facteurs ne bat un modèle sans facteurs.
+
+Sur 2010-2026, en validation chronologique, le modèle à facteurs (Gradient Boosting) ne fait mieux que le meilleur modèle sans facteurs **sur aucune des 9 cibles**. La règle du protocole, fixée avant les résultats, s'applique : **pas de classement des familles présenté comme un résultat.**
+:::
+
+```{python}
+from _commun import lire, tableau
+
+c = lire("modele_horizons.csv")
+c = c[(c["modele"] == "gradient_boosting") & (c["lecture"] == "brute")].copy()
+c["Cible"] = c["cible"].map({"sens": "Sens du prix", "vol": "Volatilité"})
+sens = c["cible"] == "sens"
+c["Modèle à facteurs"] = c["score_2010-2026"].where(sens, -c["score_2010-2026"])
+c["Meilleur sans facteurs"] = c["benchmark_2010-2026"].where(sens, -c["benchmark_2010-2026"])
+c["Mesure"] = sens.map({True: "Exactitude équilibrée (plus haut = mieux)", False: "RMSE (plus bas = mieux)"})
+c["Bat le benchmark ?"] = c["bat_benchmark"].map({True: "Oui", False: "Non"})
+tableau(c[["Cible", "horizon", "Mesure", "Modèle à facteurs", "Meilleur sans facteurs", "Bat le benchmark ?"]]
+        .rename(columns={"horizon": "Horizon (séances)"}))
+```
+
+Ce résultat tient avec une autre source de pluie, sans la crise 2024-2026, avec un autre modèle, et même avec une **météo parfaite** sur la semaine à venir (page [Résultats](resultats.qmd)).
+
+## Ce qu'on en retient
+
+1. **Le prix passé contient déjà l'information.** Ce que les facteurs publics disent est déjà dans le prix au moment de la prévision. Le marché semble intégrer vite l'information disponible.
+2. **La volatilité est prévisible, mais par son propre passé.** Les périodes agitées durent. Un modèle qui ne regarde que la volatilité passée (HAR) bat le modèle à facteurs à tous les horizons.
+3. **SHAP peut tromper.** Il attribue 18 à 27 % des contributions au climat pour le sens du prix. Pourtant, retirer le climat ne dégrade pas les prévisions, et les améliore même à 60 séances (page [Familles](familles.qmd)).
+4. **Une seule piste, exploratoire :** en période de crise, le volume d'articles de presse sur le cacao aide le modèle à prévoir la volatilité à 60 séances. Le modèle reste cependant moins bon que la volatilité passée seule (page [Pistes exploratoires](exploratoire.qmd)).
+
+## Comment lire ce site
+
+| Page | Contenu |
+|---|---|
+| [Marché du jour](marche.qmd) | Tableau de bord mis à jour chaque soir : cours, agitation prévue, état du marché, actualités |
+| [Données](donnees.qmd) | Prix, événements vérifiés, météo, inventaire des 28 jeux de données |
+| [Résultats](resultats.qmd) | Modèle face au benchmark, par horizon, et tests de robustesse |
+| [Familles de facteurs](familles.qmd) | Retrait de familles et SHAP, à lire comme exploratoires |
+| [Pistes exploratoires](exploratoire.qmd) | Écart à la tendance, volatilité au-delà du HAR, régime de crise |
+| [Méthode et limites](methode.qmd) | Protocole fixé à l'avance, sources, limites, usage de l'IA |
