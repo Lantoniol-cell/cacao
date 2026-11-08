@@ -1619,6 +1619,16 @@ Durée estimée pour les étapes 1 à 5 : une demi-journée. L'oral est le 18 no
 
 **À faire par l'utilisatrice.** Créer le compte GitHub et un dépôt public vide, puis me donner l'identifiant et le nom du dépôt. Les commits porteront l'adresse « noreply » de GitHub, pour ne pas rendre publique son adresse personnelle. Elle se connectera elle-même au premier envoi, par la fenêtre du navigateur.
 
+**Premier envoi (2026-11-08).**
+- Dépôt public `Lantoniol-cell/cacao` créé par l'utilisatrice et vérifié vide par l'API publique de GitHub. Identifiant numérique 354161313 lu dans son profil public, pour l'adresse noreply.
+- Commit `1da490d` : 166 fichiers. Envoi validé par l'utilisatrice (« Oui, envoie »).
+- **Problème :** l'envoi depuis mon terminal échoue (« Cannot prompt because user interactivity has been disabled »), car la connexion GitHub demande une fenêtre interactive. **Solution :** relance dans l'onglet de terminal de l'utilisatrice, où elle s'est connectée elle-même dans le navigateur. Résultat : 188 objets, 5,9 Mo, branche `main` créée sur GitHub.
+- Reste à faire par l'utilisatrice : activer GitHub Pages (branche `main`, dossier `/docs`).
+
+**Site en ligne (2026-11-08).** Pages activé par l'utilisatrice (branche `main`, dossier `/docs`). **Adresse publique : https://lantoniol-cell.github.io/cacao/**. Vérification : les 8 pages répondent avec le code 200. Le tableau de bord en ligne affiche ses 4 graphiques et ses 13 cartes. C'est l'objet public demandé par le cours.
+
+**Mises à jour suivantes.** Chaque nouvel envoi se fait avec l'accord de l'utilisatrice. Proposition : la tâche du soir n'enverrait automatiquement que le dossier `docs/`, pour ne jamais publier sans contrôle une modification du code ou du carnet.
+
 ---
 
 ## Journal d'utilisation de l'IA
