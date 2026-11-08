@@ -13,6 +13,9 @@ data/
 MapSPAM zones de production/
 Consignes du projet/
 
+# Journal de travail personnel, garde hors ligne (choix de l'utilisatrice le 2026-11-08)
+carnet_de_bord.md
+
 # Sorties Quarto intermediaires (le site publie est dans docs/)
 site/_site/
 site/.quarto/

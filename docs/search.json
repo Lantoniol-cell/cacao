@@ -270,6 +270,6 @@
     "href": "methode.html#usage-de-lintelligence-artificielle",
     "title": "Méthode et limites",
     "section": "Usage de l’intelligence artificielle",
-    "text": "Usage de l’intelligence artificielle\nCe projet a été mené avec Claude Code (Anthropic), qui a écrit les scripts de collecte, de nettoyage et de modélisation, ainsi que ce site. Chaque choix de méthode a été validé à la main avant d’être appliqué : sources de pluie, protocole, traitement des ruptures GEFS, pistes exploratoires. Chaque étape est consignée dans carnet_de_bord.md, avec un journal d’utilisation de l’IA. Règles imposées à l’IA :\n\nne jamais inventer de données ;\nrecouper tout événement daté auprès d’une source de premier plan ;\nn’utiliser une donnée qu’une fois publiée ;\nfixer les règles du modèle avant de voir les résultats."
+    "text": "Usage de l’intelligence artificielle\nCe projet a été mené avec Claude Code (Anthropic), qui a écrit les scripts de collecte, de nettoyage et de modélisation, ainsi que ce site. Chaque choix de méthode a été validé à la main avant d’être appliqué : sources de pluie, protocole, traitement des ruptures GEFS, pistes exploratoires. Chaque étape a été consignée dans un journal de travail, qui note pour chaque tâche ce que l’IA a fait et comment le résultat a été vérifié. Règles imposées à l’IA :\n\nne jamais inventer de données ;\nrecouper tout événement daté auprès d’une source de premier plan ;\nn’utiliser une donnée qu’une fois publiée ;\nfixer les règles du modèle avant de voir les résultats."
   }
 ]

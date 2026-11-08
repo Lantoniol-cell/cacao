@@ -54,7 +54,7 @@ Les données météo portent sur **349 points** des zones de cacao, repérés av
 
 ## Usage de l'intelligence artificielle
 
-Ce projet a été mené avec **Claude Code** (Anthropic), qui a écrit les scripts de collecte, de nettoyage et de modélisation, ainsi que ce site. Chaque choix de méthode a été validé à la main avant d'être appliqué : sources de pluie, protocole, traitement des ruptures GEFS, pistes exploratoires. Chaque étape est consignée dans `carnet_de_bord.md`, avec un journal d'utilisation de l'IA. Règles imposées à l'IA :
+Ce projet a été mené avec **Claude Code** (Anthropic), qui a écrit les scripts de collecte, de nettoyage et de modélisation, ainsi que ce site. Chaque choix de méthode a été validé à la main avant d'être appliqué : sources de pluie, protocole, traitement des ruptures GEFS, pistes exploratoires. Chaque étape a été consignée dans un journal de travail, qui note pour chaque tâche ce que l'IA a fait et comment le résultat a été vérifié. Règles imposées à l'IA :
 
 - ne jamais inventer de données ;
 - recouper tout événement daté auprès d'une source de premier plan ;

@@ -13,7 +13,6 @@ Le site publié se trouve dans `docs/` (GitHub Pages). Ses sources Quarto sont d
 | Dossier ou fichier | Contenu |
 |---|---|
 | `protocole.md` | Règles d'analyse fixées avant les résultats, et leurs amendements datés |
-| `carnet_de_bord.md` | Journal de chaque étape et journal d'utilisation de l'IA |
 | `scripts/` | Collecte (01 à 32), modèles (30, 33, 37 à 39, 42 à 44), tableau de bord (40) |
 | `src/cacao/` | Fonctions communes : grille, météo, variables, évaluation, marché, indicateurs |
 | `tests/` | Tests, dont ceux qui vérifient qu'aucune donnée future n'est utilisée |
@@ -31,4 +30,4 @@ python -m venv .venv
 
 Ensuite, lancer les scripts dans l'ordre de leur numéro, avec `PYTHONPATH=src`.
 
-Analyse menée avec l'aide de Claude Code (Anthropic) : voir le journal d'utilisation de l'IA dans `carnet_de_bord.md`.
+Analyse menée avec l'aide de Claude Code (Anthropic). L'usage de l'IA est décrit dans la page « Méthode et limites » du site.
