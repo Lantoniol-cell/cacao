@@ -10,7 +10,7 @@ Le modèle à facteurs ne bat le benchmark sur aucune cible. Le protocole, fixé
 
 ```{python}
 import plotly.graph_objects as go
-from _commun import DIVERGENT, SEQUENTIEL, FAMILLES, lire
+from _commun import DIVERGENT, SEQUENTIEL, FAMILLES, lire, tableau
 
 COLONNES = [("sens", 1), ("sens", 5), ("sens", 20), ("sens", 60), ("sens", 120), ("vol", 5), ("vol", 20), ("vol", 60), ("vol", 120)]
 ETIQ = [f"{'Sens' if c == 'sens' else 'Vol.'} {h}" for c, h in COLONNES]
@@ -30,6 +30,129 @@ def carte(t, valeur, titre, echelle, centre, texte):
                       margin=dict(t=110, l=170))
     return fig
 ```
+
+## Les 8 familles de facteurs
+
+Chaque famille regroupe des variables qui racontent une même histoire sur le prix du cacao. Le modèle ne reçoit jamais de niveaux bruts, comme un prix ou un taux. Il reçoit des **variations** (sur 1, 3 ou 6 mois selon l'horizon) ou des **écarts à la normale**, et chaque donnée n'entre qu'une fois publiée.
+
+```{python}
+s = lire("shap_variables.csv")
+n = s[(s["cible"] == "sens") & (s["horizon"] == 20)].drop_duplicates("variable").groupby("famille")["variable"].count()
+import pandas as pd
+resume = pd.DataFrame([
+    ("climat", "La météo dans les zones de cacao et El Niño", "ERA5, CHIRPS, NASA POWER, NOAA"),
+    ("geopolitique", "Tensions politiques, conflits et manifestations", "GDELT, indice GPR"),
+    ("biodiversite", "Pression sur les sols et les forêts : incendies, intrants, rendement", "NASA FIRMS, FAOSTAT"),
+    ("couts_production", "Ce que coûte produire et exporter : énergie, engrais, monnaies", "Yahoo Finance, Banque mondiale"),
+    ("production_offre", "Quantités récoltées par les grands producteurs", "FAOSTAT"),
+    ("marche_finance", "Le marché du cacao lui-même et le contexte financier", "Yahoo Finance"),
+    ("investisseurs_biais", "Paris des spéculateurs et attention du public", "CFTC, Google Trends, GDELT"),
+    ("demande_substituts", "Les acheteurs de cacao et les produits proches", "Banque mondiale, Yahoo Finance"),
+], columns=["famille", "Ce qu'elle mesure", "Sources"])
+resume["Variables"] = resume["famille"].map(n).fillna(0).astype(int)
+resume["Famille"] = resume["famille"].map(FAMILLES)
+tableau(resume[["Famille", "Ce qu'elle mesure", "Sources", "Variables"]])
+```
+
+Le nombre de variables est donné pour l'horizon de 20 séances : il change un peu avec l'horizon. Cliquez sur une famille pour le détail.
+
+::: {.callout-note collapse="true"}
+## Climat : la météo des zones de cacao
+
+**Pourquoi.** La récolte dépend de la pluie, de la chaleur et de l'humidité. Une mauvaise saison peut réduire l'offre et faire monter le prix.
+
+**Variables**, pour la Côte d'Ivoire, le Ghana, l'Indonésie et un indice mondial pondéré par la production :
+
+- pluie des 7 et 30 derniers jours, écart à la normale (ERA5) ;
+- pluie des 1, 3 et 6 derniers mois, écart à la normale (CHIRPS) ;
+- température maximale, humidité de l'air, humidité du sol en profondeur, ensoleillement et vent, en écart à la normale sur 30 jours (NASA POWER) ;
+- indice El Niño (ONI) et sa variation sur 3 mois.
+
+Les points météo sont placés dans les zones de culture grâce à la carte MapSPAM.
+:::
+
+::: {.callout-note collapse="true"}
+## Géopolitique : tensions et conflits
+
+**Pourquoi.** Une crise politique dans un pays producteur peut bloquer les exportations. En 2011, Alassane Ouattara a appelé à suspendre les exportations ivoiriennes pendant la crise post-électorale.
+
+**Variables :**
+
+- pour la Côte d'Ivoire, le Ghana et l'Indonésie : part du pays dans l'actualité mondiale, part des événements de conflit et part des manifestations, sur 30 jours (base d'événements GDELT) ;
+- indice de risque géopolitique mondial (GPR) : niveau général, actes et menaces, en moyenne mobile ;
+- indice GPR mensuel par pays, pour le Brésil, l'Indonésie et le Pérou. Il n'existe pas pour la Côte d'Ivoire ni le Ghana.
+:::
+
+::: {.callout-note collapse="true"}
+## Biodiversité : sols, forêts et intrants
+
+**Pourquoi.** L'épuisement des sols, la déforestation et l'usage d'engrais ou de pesticides pèsent sur les rendements à moyen terme.
+
+**Variables**, pour la Côte d'Ivoire, le Ghana et l'Indonésie :
+
+- incendies de végétation détectés par satellite dans les zones de cacao, écart à la normale sur 30 jours (NASA FIRMS) ;
+- usage de pesticides et d'azote par hectare cultivé, variation annuelle (FAOSTAT) ;
+- rendement du cacao par hectare, variation annuelle (FAOSTAT). Souvent estimé par la FAO, voir la page Météo et production.
+
+Les données FAOSTAT d'une année ne sont utilisées qu'à partir du 1er janvier de l'année N+2, leur date de publication approximative. Les maladies (swollen shoot) et l'orpaillage n'ont pas de série publique : ils manquent.
+:::
+
+::: {.callout-note collapse="true"}
+## Coûts de production : énergie, engrais, monnaies
+
+**Pourquoi.** Produire, transporter et exporter coûte plus cher quand l'énergie ou les engrais montent. Les monnaies des pays producteurs changent aussi ce que gagnent les planteurs et les exportateurs.
+
+**Variables :**
+
+- pétrole (WTI) et gaz naturel, en variation ;
+- prix mondiaux de l'urée, du DAP, du TSP et de la potasse, variation sur 1 et 3 mois (Banque mondiale) ;
+- taux de change face au dollar de l'euro, du cedi ghanéen, de la roupie indonésienne et du naira nigérian, en variation. La Côte d'Ivoire utilise le franc CFA, lié à l'euro.
+:::
+
+::: {.callout-note collapse="true"}
+## Production et offre : les quantités récoltées
+
+**Pourquoi.** C'est le fondamental le plus direct : moins de cacao récolté devrait signifier un prix plus haut.
+
+**Variables :** production de fèves de la Côte d'Ivoire, du Ghana et de l'Indonésie, en variation annuelle (FAOSTAT), disponible à N+2. C'est la famille la plus petite. Il manque des données de stocks : les stocks certifiés ICE sont payants.
+:::
+
+::: {.callout-note collapse="true"}
+## Marché et finance : le cacao lui-même et son contexte
+
+**Pourquoi.** Le passé récent du prix (tendance, agitation, volume échangé) et le contexte financier (dollar, taux d'intérêt) influencent les décisions des acheteurs et des spéculateurs.
+
+**Variables :**
+
+- rendement passé du cacao sur 1 et 3 mois, volatilité récente et volume échangé, en écart à son niveau habituel ;
+- indice du dollar, en variation ;
+- taux américains à 10 ans et à 3 mois, en variation.
+
+C'est cette information que les modèles sans facteurs exploitent déjà.
+:::
+
+::: {.callout-note collapse="true"}
+## Investisseurs et biais : spéculation et attention
+
+**Pourquoi.** Les fonds peuvent amplifier les mouvements quand ils achètent ou vendent en masse. Une forte attention du public ou des médias peut accompagner les excès.
+
+**Variables :**
+
+- positions nettes des fonds, des non-commerciaux et des producteurs, en part de l'intérêt ouvert, et leurs variations. Intérêt ouvert en variation (rapports hebdomadaires de la CFTC, utilisés après leur publication du vendredi) ;
+- recherches Google sur « chocolate », « cocoa » et « cocoa price », variation sur 1 mois et sur 1 an ;
+- volume et ton des articles de presse sur le cacao, dans le monde et en Afrique de l'Ouest, en moyenne mobile (GDELT).
+:::
+
+::: {.callout-note collapse="true"}
+## Demande et substituts : acheteurs et produits proches
+
+**Pourquoi.** Les chocolatiers sont les acheteurs finaux. Le sucre, l'huile de palme et le café se cultivent dans les mêmes régions ou entrent dans les mêmes produits.
+
+**Variables :**
+
+- cours de bourse de Barry Callebaut, Hershey, Mondelez, Nestlé et Lindt (deux titres), en rendement ;
+- prix mondiaux du sucre, de l'huile de palme et du café robusta, variation sur 1 et 3 mois (Banque mondiale).
+:::
 
 ## Mesure principale : retrait d'une famille
 

@@ -110,21 +110,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
-
-
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-
 <script>
-
 window.PlotlyConfig = {MathJaxConfig: 'local'};
-
 if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
-
 </script>
-
 <script type="module">import "https://cdn.plot.ly/plotly-4.1.1.min"</script>
-
-
 
 
 
@@ -195,7 +186,8 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
     <h2 id="toc-title">Sur cette page</h2>
    
   <ul>
-  <li><a href="#mesure-principale-retrait-dune-famille" id="toc-mesure-principale-retrait-dune-famille" class="nav-link active" data-scroll-target="#mesure-principale-retrait-dune-famille">Mesure principale : retrait d’une famille</a></li>
+  <li><a href="#les-8-familles-de-facteurs" id="toc-les-8-familles-de-facteurs" class="nav-link active" data-scroll-target="#les-8-familles-de-facteurs">Les 8 familles de facteurs</a></li>
+  <li><a href="#mesure-principale-retrait-dune-famille" id="toc-mesure-principale-retrait-dune-famille" class="nav-link" data-scroll-target="#mesure-principale-retrait-dune-famille">Mesure principale : retrait d’une famille</a></li>
   <li><a href="#mesure-secondaire-shap" id="toc-mesure-secondaire-shap" class="nav-link" data-scroll-target="#mesure-secondaire-shap">Mesure secondaire : SHAP</a></li>
   <li><a href="#pourquoi-les-deux-mesures-divergent" id="toc-pourquoi-les-deux-mesures-divergent" class="nav-link" data-scroll-target="#pourquoi-les-deux-mesures-divergent">Pourquoi les deux mesures divergent</a></li>
   <li><a href="#avant-et-depuis-2024" id="toc-avant-et-depuis-2024" class="nav-link" data-scroll-target="#avant-et-depuis-2024">Avant et depuis 2024</a></li>
@@ -237,11 +229,11 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 <p>Le modèle à facteurs ne bat le benchmark sur aucune cible. Le protocole, fixé avant les résultats, interdit alors de présenter un classement des familles comme un résultat. Cette page décrit donc ce qu’utilise un modèle qui ne fait pas mieux qu’un modèle sans facteurs. Elle montre aussi pourquoi les deux mesures d’impact ne racontent pas la même histoire.</p>
 </div>
 </div>
-<div id="fed283a7" class="cell" data-execution_count="1">
+<div id="baef9e0a" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Voir le code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _commun <span class="im">import</span> DIVERGENT, SEQUENTIEL, FAMILLES, lire</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _commun <span class="im">import</span> DIVERGENT, SEQUENTIEL, FAMILLES, lire, tableau</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>COLONNES <span class="op">=</span> [(<span class="st">"sens"</span>, <span class="dv">1</span>), (<span class="st">"sens"</span>, <span class="dv">5</span>), (<span class="st">"sens"</span>, <span class="dv">20</span>), (<span class="st">"sens"</span>, <span class="dv">60</span>), (<span class="st">"sens"</span>, <span class="dv">120</span>), (<span class="st">"vol"</span>, <span class="dv">5</span>), (<span class="st">"vol"</span>, <span class="dv">20</span>), (<span class="st">"vol"</span>, <span class="dv">60</span>), (<span class="st">"vol"</span>, <span class="dv">120</span>)]</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ETIQ <span class="op">=</span> [<span class="ss">f"</span><span class="sc">{</span><span class="st">'Sens'</span> <span class="cf">if</span> c <span class="op">==</span> <span class="st">'sens'</span> <span class="cf">else</span> <span class="st">'Vol.'</span><span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>h<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> c, h <span class="kw">in</span> COLONNES]</span>
@@ -262,6 +254,268 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+<section id="les-8-familles-de-facteurs" class="level2">
+<h2 class="anchored" data-anchor-id="les-8-familles-de-facteurs">Les 8 familles de facteurs</h2>
+<p>Chaque famille regroupe des variables qui racontent une même histoire sur le prix du cacao. Le modèle ne reçoit jamais de niveaux bruts, comme un prix ou un taux. Il reçoit des <strong>variations</strong> (sur 1, 3 ou 6 mois selon l’horizon) ou des <strong>écarts à la normale</strong>, et chaque donnée n’entre qu’une fois publiée.</p>
+<div id="bb9bf7fc" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Voir le code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> lire(<span class="st">"shap_variables.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> s[(s[<span class="st">"cible"</span>] <span class="op">==</span> <span class="st">"sens"</span>) <span class="op">&amp;</span> (s[<span class="st">"horizon"</span>] <span class="op">==</span> <span class="dv">20</span>)].drop_duplicates(<span class="st">"variable"</span>).groupby(<span class="st">"famille"</span>)[<span class="st">"variable"</span>].count()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>resume <span class="op">=</span> pd.DataFrame([</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"climat"</span>, <span class="st">"La météo dans les zones de cacao et El Niño"</span>, <span class="st">"ERA5, CHIRPS, NASA POWER, NOAA"</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"geopolitique"</span>, <span class="st">"Tensions politiques, conflits et manifestations"</span>, <span class="st">"GDELT, indice GPR"</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"biodiversite"</span>, <span class="st">"Pression sur les sols et les forêts : incendies, intrants, rendement"</span>, <span class="st">"NASA FIRMS, FAOSTAT"</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"couts_production"</span>, <span class="st">"Ce que coûte produire et exporter : énergie, engrais, monnaies"</span>, <span class="st">"Yahoo Finance, Banque mondiale"</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"production_offre"</span>, <span class="st">"Quantités récoltées par les grands producteurs"</span>, <span class="st">"FAOSTAT"</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"marche_finance"</span>, <span class="st">"Le marché du cacao lui-même et le contexte financier"</span>, <span class="st">"Yahoo Finance"</span>),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"investisseurs_biais"</span>, <span class="st">"Paris des spéculateurs et attention du public"</span>, <span class="st">"CFTC, Google Trends, GDELT"</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"demande_substituts"</span>, <span class="st">"Les acheteurs de cacao et les produits proches"</span>, <span class="st">"Banque mondiale, Yahoo Finance"</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>], columns<span class="op">=</span>[<span class="st">"famille"</span>, <span class="st">"Ce qu'elle mesure"</span>, <span class="st">"Sources"</span>])</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>resume[<span class="st">"Variables"</span>] <span class="op">=</span> resume[<span class="st">"famille"</span>].<span class="bu">map</span>(n).fillna(<span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>resume[<span class="st">"Famille"</span>] <span class="op">=</span> resume[<span class="st">"famille"</span>].<span class="bu">map</span>(FAMILLES)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>tableau(resume[[<span class="st">"Famille"</span>, <span class="st">"Ce qu'elle mesure"</span>, <span class="st">"Sources"</span>, <span class="st">"Variables"</span>]])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<table class="dataframe table table-sm table-striped caption-top small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Famille</th>
+<th data-quarto-table-cell-role="th">Ce qu'elle mesure</th>
+<th data-quarto-table-cell-role="th">Sources</th>
+<th data-quarto-table-cell-role="th">Variables</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Climat</td>
+<td>La météo dans les zones de cacao et El Niño</td>
+<td>ERA5, CHIRPS, NASA POWER, NOAA</td>
+<td>42</td>
+</tr>
+<tr class="even">
+<td>Géopolitique</td>
+<td>Tensions politiques, conflits et manifestations</td>
+<td>GDELT, indice GPR</td>
+<td>19</td>
+</tr>
+<tr class="odd">
+<td>Biodiversité</td>
+<td>Pression sur les sols et les forêts : incendies, intrants, rendement</td>
+<td>NASA FIRMS, FAOSTAT</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td>Coûts de production</td>
+<td>Ce que coûte produire et exporter : énergie, engrais, monnaies</td>
+<td>Yahoo Finance, Banque mondiale</td>
+<td>20</td>
+</tr>
+<tr class="odd">
+<td>Production / offre</td>
+<td>Quantités récoltées par les grands producteurs</td>
+<td>FAOSTAT</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Marché et finance</td>
+<td>Le marché du cacao lui-même et le contexte financier</td>
+<td>Yahoo Finance</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td>Investisseurs et biais</td>
+<td>Paris des spéculateurs et attention du public</td>
+<td>CFTC, Google Trends, GDELT</td>
+<td>17</td>
+</tr>
+<tr class="even">
+<td>Demande et substituts</td>
+<td>Les acheteurs de cacao et les produits proches</td>
+<td>Banque mondiale, Yahoo Finance</td>
+<td>18</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Le nombre de variables est donné pour l’horizon de 20 séances : il change un peu avec l’horizon. Cliquez sur une famille pour le détail.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Climat : la météo des zones de cacao
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Pourquoi.</strong> La récolte dépend de la pluie, de la chaleur et de l’humidité. Une mauvaise saison peut réduire l’offre et faire monter le prix.</p>
+<p><strong>Variables</strong>, pour la Côte d’Ivoire, le Ghana, l’Indonésie et un indice mondial pondéré par la production :</p>
+<ul>
+<li>pluie des 7 et 30 derniers jours, écart à la normale (ERA5) ;</li>
+<li>pluie des 1, 3 et 6 derniers mois, écart à la normale (CHIRPS) ;</li>
+<li>température maximale, humidité de l’air, humidité du sol en profondeur, ensoleillement et vent, en écart à la normale sur 30 jours (NASA POWER) ;</li>
+<li>indice El Niño (ONI) et sa variation sur 3 mois.</li>
+</ul>
+<p>Les points météo sont placés dans les zones de culture grâce à la carte MapSPAM.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Géopolitique : tensions et conflits
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Pourquoi.</strong> Une crise politique dans un pays producteur peut bloquer les exportations. En 2011, Alassane Ouattara a appelé à suspendre les exportations ivoiriennes pendant la crise post-électorale.</p>
+<p><strong>Variables :</strong></p>
+<ul>
+<li>pour la Côte d’Ivoire, le Ghana et l’Indonésie : part du pays dans l’actualité mondiale, part des événements de conflit et part des manifestations, sur 30 jours (base d’événements GDELT) ;</li>
+<li>indice de risque géopolitique mondial (GPR) : niveau général, actes et menaces, en moyenne mobile ;</li>
+<li>indice GPR mensuel par pays, pour le Brésil, l’Indonésie et le Pérou. Il n’existe pas pour la Côte d’Ivoire ni le Ghana.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Biodiversité : sols, forêts et intrants
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Pourquoi.</strong> L’épuisement des sols, la déforestation et l’usage d’engrais ou de pesticides pèsent sur les rendements à moyen terme.</p>
+<p><strong>Variables</strong>, pour la Côte d’Ivoire, le Ghana et l’Indonésie :</p>
+<ul>
+<li>incendies de végétation détectés par satellite dans les zones de cacao, écart à la normale sur 30 jours (NASA FIRMS) ;</li>
+<li>usage de pesticides et d’azote par hectare cultivé, variation annuelle (FAOSTAT) ;</li>
+<li>rendement du cacao par hectare, variation annuelle (FAOSTAT). Souvent estimé par la FAO, voir la page Météo et production.</li>
+</ul>
+<p>Les données FAOSTAT d’une année ne sont utilisées qu’à partir du 1er janvier de l’année N+2, leur date de publication approximative. Les maladies (swollen shoot) et l’orpaillage n’ont pas de série publique : ils manquent.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Coûts de production : énergie, engrais, monnaies
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Pourquoi.</strong> Produire, transporter et exporter coûte plus cher quand l’énergie ou les engrais montent. Les monnaies des pays producteurs changent aussi ce que gagnent les planteurs et les exportateurs.</p>
+<p><strong>Variables :</strong></p>
+<ul>
+<li>pétrole (WTI) et gaz naturel, en variation ;</li>
+<li>prix mondiaux de l’urée, du DAP, du TSP et de la potasse, variation sur 1 et 3 mois (Banque mondiale) ;</li>
+<li>taux de change face au dollar de l’euro, du cedi ghanéen, de la roupie indonésienne et du naira nigérian, en variation. La Côte d’Ivoire utilise le franc CFA, lié à l’euro.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Production et offre : les quantités récoltées
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Pourquoi.</strong> C’est le fondamental le plus direct : moins de cacao récolté devrait signifier un prix plus haut.</p>
+<p><strong>Variables :</strong> production de fèves de la Côte d’Ivoire, du Ghana et de l’Indonésie, en variation annuelle (FAOSTAT), disponible à N+2. C’est la famille la plus petite. Il manque des données de stocks : les stocks certifiés ICE sont payants.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Marché et finance : le cacao lui-même et son contexte
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Pourquoi.</strong> Le passé récent du prix (tendance, agitation, volume échangé) et le contexte financier (dollar, taux d’intérêt) influencent les décisions des acheteurs et des spéculateurs.</p>
+<p><strong>Variables :</strong></p>
+<ul>
+<li>rendement passé du cacao sur 1 et 3 mois, volatilité récente et volume échangé, en écart à son niveau habituel ;</li>
+<li>indice du dollar, en variation ;</li>
+<li>taux américains à 10 ans et à 3 mois, en variation.</li>
+</ul>
+<p>C’est cette information que les modèles sans facteurs exploitent déjà.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Investisseurs et biais : spéculation et attention
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Pourquoi.</strong> Les fonds peuvent amplifier les mouvements quand ils achètent ou vendent en masse. Une forte attention du public ou des médias peut accompagner les excès.</p>
+<p><strong>Variables :</strong></p>
+<ul>
+<li>positions nettes des fonds, des non-commerciaux et des producteurs, en part de l’intérêt ouvert, et leurs variations. Intérêt ouvert en variation (rapports hebdomadaires de la CFTC, utilisés après leur publication du vendredi) ;</li>
+<li>recherches Google sur « chocolate », « cocoa » et « cocoa price », variation sur 1 mois et sur 1 an ;</li>
+<li>volume et ton des articles de presse sur le cacao, dans le monde et en Afrique de l’Ouest, en moyenne mobile (GDELT).</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Demande et substituts : acheteurs et produits proches
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Pourquoi.</strong> Les chocolatiers sont les acheteurs finaux. Le sucre, l’huile de palme et le café se cultivent dans les mêmes régions ou entrent dans les mêmes produits.</p>
+<p><strong>Variables :</strong></p>
+<ul>
+<li>cours de bourse de Barry Callebaut, Hershey, Mondelez, Nestlé et Lindt (deux titres), en rendement ;</li>
+<li>prix mondiaux du sucre, de l’huile de palme et du café robusta, variation sur 1 et 3 mois (Banque mondiale).</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
 <section id="mesure-principale-retrait-dune-famille" class="level2">
 <h2 class="anchored" data-anchor-id="mesure-principale-retrait-dune-famille">Mesure principale : retrait d’une famille</h2>
 <p>On refait le modèle sans une famille, puis on mesure la perte de performance hors échantillon.</p>
@@ -270,23 +524,23 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 <li><strong>Négatif (bleu) :</strong> le modèle est <strong>meilleur sans elle</strong>.</li>
 <li>Un astérisque marque un intervalle à 99,4 % qui exclut zéro.</li>
 </ul>
-<div id="ffeae397" class="cell" data-execution_count="2">
+<div id="cdd40dad" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Voir le code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> lire(<span class="st">"retrait_familles.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>r[<span class="st">"sig"</span>] <span class="op">=</span> (r[<span class="st">"ic_bas"</span>] <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">|</span> (r[<span class="st">"ic_haut"</span>] <span class="op">&lt;</span> <span class="dv">0</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>r[<span class="st">"texte"</span>] <span class="op">=</span> r[<span class="st">"perte"</span>].<span class="bu">round</span>(<span class="dv">3</span>).astype(<span class="bu">str</span>) <span class="op">+</span> r[<span class="st">"sig"</span>].<span class="bu">map</span>({<span class="va">True</span>: <span class="st">"*"</span>, <span class="va">False</span>: <span class="st">""</span>})</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> r.set_index([<span class="st">"famille"</span>, <span class="st">"cible"</span>, <span class="st">"horizon"</span>])[<span class="st">"texte"</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> carte(r, <span class="st">"perte"</span>, <span class="st">"Perte au retrait de chaque famille (exactitude pour le sens, RMSE pour la volatilité)"</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            DIVERGENT, <span class="va">True</span>, <span class="kw">lambda</span> v: <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:+.3f}</span><span class="ss">"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>fig.data[<span class="dv">0</span>].text <span class="op">=</span> [[m.get((f, c, h), <span class="st">""</span>) <span class="cf">for</span> c, h <span class="kw">in</span> COLONNES] <span class="cf">for</span> f <span class="kw">in</span> FAMILLES]</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> lire(<span class="st">"retrait_familles.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>r[<span class="st">"sig"</span>] <span class="op">=</span> (r[<span class="st">"ic_bas"</span>] <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">|</span> (r[<span class="st">"ic_haut"</span>] <span class="op">&lt;</span> <span class="dv">0</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>r[<span class="st">"texte"</span>] <span class="op">=</span> r[<span class="st">"perte"</span>].<span class="bu">round</span>(<span class="dv">3</span>).astype(<span class="bu">str</span>) <span class="op">+</span> r[<span class="st">"sig"</span>].<span class="bu">map</span>({<span class="va">True</span>: <span class="st">"*"</span>, <span class="va">False</span>: <span class="st">""</span>})</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> r.set_index([<span class="st">"famille"</span>, <span class="st">"cible"</span>, <span class="st">"horizon"</span>])[<span class="st">"texte"</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> carte(r, <span class="st">"perte"</span>, <span class="st">"Perte au retrait de chaque famille (exactitude pour le sens, RMSE pour la volatilité)"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            DIVERGENT, <span class="va">True</span>, <span class="kw">lambda</span> v: <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:+.3f}</span><span class="ss">"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>fig.data[<span class="dv">0</span>].text <span class="op">=</span> [[m.get((f, c, h), <span class="st">""</span>) <span class="cf">for</span> c, h <span class="kw">in</span> COLONNES] <span class="cf">for</span> f <span class="kw">in</span> FAMILLES]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div style="height:430px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="d07c0c7e-ef12-483b-aa72-0177e9f24e42" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("d07c0c7e-ef12-483b-aa72-0177e9f24e42")) {                    Plotly.newPlot(                        "d07c0c7e-ef12-483b-aa72-0177e9f24e42",                        [{"colorbar":{"thickness":10},"colorscale":[[0,"#1c5cab"],[0.5,"#f0efec"],[1,"#e34948"]],"hovertemplate":"%{y}\u003cbr\u003e%{x}\u003cbr\u003e%{text}\u003cextra\u003e\u003c\u002fextra\u003e","text":[["-0.011","-0.009","-0.014","-0.061*","-0.037","0.0","-0.005*","-0.0","-0.003"],["-0.005","-0.004","0.008","-0.019","0.018","0.004*","0.004*","-0.003","0.001"],["-0.009","-0.004","0.002","-0.01","-0.008","-0.004*","-0.002*","-0.002","-0.008*"],["-0.009","0.002","-0.004","0.006","0.019","0.001","0.001","-0.003","-0.003"],["-0.001","-0.002","0.002","0.003","0.002","0.001","0.001*","0.0","-0.002"],["-0.009","0.007","0.012","-0.015","-0.008","0.009*","0.029*","0.028*","0.018*"],["-0.005","0.0","-0.011","-0.007","-0.013","-0.0","0.002","0.003","-0.001"],["-0.002","-0.003","-0.014","0.022","-0.028","0.001","0.001","0.0","0.003"]],"textfont":{"size":11},"texttemplate":"%{text}","x":["Sens 1","Sens 5","Sens 20","Sens 60","Sens 120","Vol. 5","Vol. 20","Vol. 60","Vol. 120"],"xgap":2,"y":["Climat","G\u00e9opolitique","Biodiversit\u00e9","Co\u00fbts de production","Production \u002f offre","March\u00e9 et finance","Investisseurs et biais","Demande et substituts"],"ygap":2,"z":{"dtype":"f8","bdata":"gIqypbPLhr8AK5oUiqyBv4B9YqZeAYy\u002f4CgniJhkr7\u002fge3De9tyivwA81ry\u002fMTY\u002fwAX2CLvOc78AmE8Rw+Exv4AxwiVyHGu\u002fAP4\u002fkSivdL8ALq1K2cBxvwA1mzUfY4E\u002fQCSdO88Bk7+AFyuH23iSP2CCqgw3NXE\u002fwJOpcMtGcD9AuuQ5cItpvwCkDDCHD0Y\u002fQOr7D8Yvg78A40fWUUxuvwCY7yHiB10\u002fAIikXUQChL9gKaOdbiyBv0BJ6\u002fSLym2\u002fALO4nTdXZL+AkqNw23pjv6C8qvifiX+\u002fwF3iPX3Lgb8AFhE6gL5hPwCQoGePHW6\u002fgBkPqb74dz9A0MR82G+TPwBsP9ZNBEM\u002fADxOqcyDUz8Alu\u002farBhqv8D8HtG0FGi\u002fAPClDvNWR78AWkyxp2RjvwCfLFYkEWM\u002fAFkFpq16az8AYdwV4tZbPwDBK5rwkVQ\u002fAEvvNLawUj8AQFTNbzfkPgDrThmxxFq\u002fwKuhZ3MCgr8AUZMNPot7P0CIsHQ+soc\u002fwHcKGCJ2jr9gWfDiulaAv7BJTfalaIE\u002f8BrlYYHCnT\u002fYtIOrvBqdP8hrCh9ODZI\u002fAKM6kbeJdb8A4FF06sgfP4BZXwcxiIa\u002fQIDt9G\u002fgfb8gnLWfmwiKvwDArD7QrDO\u002fwG2bytROYT+ATYW08J5kPwA+vYKLjUO\u002fAKMvyvBgY78AEW4P7u1kvwBb972acI2\u002f4GHWmMbNlj8Q\u002fg4zdTWcvwBJ8IEvMEE\u002fACKRApDrSz8AzJPJLP8nP0CW9A2AT2o\u002f","shape":"8, 9"},"zmax":0.06131436025641945,"zmid":0,"zmin":-0.06131436025641945,"type":"heatmap"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"yaxis":{"autorange":"reversed","automargin":true},"xaxis":{"side":"top"},"margin":{"t":110,"l":170},"title":{"text":"Perte au retrait de chaque famille (exactitude pour le sens, RMSE pour la volatilit\u00e9)"},"height":430},                        {"responsive": true}                    ).then(function(){
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="58dce717-0d60-4302-a7d6-63499244a81f" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("58dce717-0d60-4302-a7d6-63499244a81f")) {                    Plotly.newPlot(                        "58dce717-0d60-4302-a7d6-63499244a81f",                        [{"colorbar":{"thickness":10},"colorscale":[[0,"#1c5cab"],[0.5,"#f0efec"],[1,"#e34948"]],"hovertemplate":"%{y}\u003cbr\u003e%{x}\u003cbr\u003e%{text}\u003cextra\u003e\u003c\u002fextra\u003e","text":[["-0.011","-0.009","-0.014","-0.061*","-0.037","0.0","-0.005*","-0.0","-0.003"],["-0.005","-0.004","0.008","-0.019","0.018","0.004*","0.004*","-0.003","0.001"],["-0.009","-0.004","0.002","-0.01","-0.008","-0.004*","-0.002*","-0.002","-0.008*"],["-0.009","0.002","-0.004","0.006","0.019","0.001","0.001","-0.003","-0.003"],["-0.001","-0.002","0.002","0.003","0.002","0.001","0.001*","0.0","-0.002"],["-0.009","0.007","0.012","-0.015","-0.008","0.009*","0.029*","0.028*","0.018*"],["-0.005","0.0","-0.011","-0.007","-0.013","-0.0","0.002","0.003","-0.001"],["-0.002","-0.003","-0.014","0.022","-0.028","0.001","0.001","0.0","0.003"]],"textfont":{"size":11},"texttemplate":"%{text}","x":["Sens 1","Sens 5","Sens 20","Sens 60","Sens 120","Vol. 5","Vol. 20","Vol. 60","Vol. 120"],"xgap":2,"y":["Climat","G\u00e9opolitique","Biodiversit\u00e9","Co\u00fbts de production","Production \u002f offre","March\u00e9 et finance","Investisseurs et biais","Demande et substituts"],"ygap":2,"z":{"dtype":"f8","bdata":"gIqypbPLhr8AK5oUiqyBv4B9YqZeAYy\u002f4CgniJhkr7\u002fge3De9tyivwA81ry\u002fMTY\u002fwAX2CLvOc78AmE8Rw+Exv4AxwiVyHGu\u002fAP4\u002fkSivdL8ALq1K2cBxvwA1mzUfY4E\u002fQCSdO88Bk7+AFyuH23iSP2CCqgw3NXE\u002fwJOpcMtGcD9AuuQ5cItpvwCkDDCHD0Y\u002fQOr7D8Yvg78A40fWUUxuvwCY7yHiB10\u002fAIikXUQChL9gKaOdbiyBv0BJ6\u002fSLym2\u002fALO4nTdXZL+AkqNw23pjv6C8qvifiX+\u002fwF3iPX3Lgb8AFhE6gL5hPwCQoGePHW6\u002fgBkPqb74dz9A0MR82G+TPwBsP9ZNBEM\u002fADxOqcyDUz8Alu\u002farBhqv8D8HtG0FGi\u002fAPClDvNWR78AWkyxp2RjvwCfLFYkEWM\u002fAFkFpq16az8AYdwV4tZbPwDBK5rwkVQ\u002fAEvvNLawUj8AQFTNbzfkPgDrThmxxFq\u002fwKuhZ3MCgr8AUZMNPot7P0CIsHQ+soc\u002fwHcKGCJ2jr9gWfDiulaAv7BJTfalaIE\u002f8BrlYYHCnT\u002fYtIOrvBqdP8hrCh9ODZI\u002fAKM6kbeJdb8A4FF06sgfP4BZXwcxiIa\u002fQIDt9G\u002fgfb8gnLWfmwiKvwDArD7QrDO\u002fwG2bytROYT+ATYW08J5kPwA+vYKLjUO\u002fAKMvyvBgY78AEW4P7u1kvwBb972acI2\u002f4GHWmMbNlj8Q\u002fg4zdTWcvwBJ8IEvMEE\u002fACKRApDrSz8AzJPJLP8nP0CW9A2AT2o\u002f","shape":"8, 9"},"zmax":0.06131436025641945,"zmid":0,"zmin":-0.06131436025641945,"type":"heatmap"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"yaxis":{"autorange":"reversed","automargin":true},"xaxis":{"side":"top"},"margin":{"t":110,"l":170},"title":{"text":"Perte au retrait de chaque famille (exactitude pour le sens, RMSE pour la volatilit\u00e9)"},"height":430},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('d07c0c7e-ef12-483b-aa72-0177e9f24e42');
+var gd = document.getElementById('58dce717-0d60-4302-a7d6-63499244a81f');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -319,18 +573,18 @@ if (outputEl) {{
 <section id="mesure-secondaire-shap" class="level2">
 <h2 class="anchored" data-anchor-id="mesure-secondaire-shap">Mesure secondaire : SHAP</h2>
 <p>Part de chaque famille dans les contributions SHAP absolues moyennes, sur 2010-2023.</p>
-<div id="b8f6be62" class="cell" data-execution_count="3">
+<div id="7438501a" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Voir le code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> lire(<span class="st">"shap_familles.csv"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> s[s[<span class="st">"periode"</span>] <span class="op">==</span> <span class="st">"2010-2023"</span>]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>carte(s, <span class="st">"part"</span>, <span class="st">"Part des contributions SHAP par famille, 2010-2023"</span>, SEQUENTIEL, <span class="va">False</span>, <span class="kw">lambda</span> v: <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.0%}</span><span class="ss">"</span>).show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> lire(<span class="st">"shap_familles.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> s[s[<span class="st">"periode"</span>] <span class="op">==</span> <span class="st">"2010-2023"</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>carte(s, <span class="st">"part"</span>, <span class="st">"Part des contributions SHAP par famille, 2010-2023"</span>, SEQUENTIEL, <span class="va">False</span>, <span class="kw">lambda</span> v: <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.0%}</span><span class="ss">"</span>).show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div style="height:430px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="e9cd94f4-1592-4bff-942b-5d58d6307c7a" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("e9cd94f4-1592-4bff-942b-5d58d6307c7a")) {                    Plotly.newPlot(                        "e9cd94f4-1592-4bff-942b-5d58d6307c7a",                        [{"colorbar":{"thickness":10},"colorscale":[[0,"#f0efec"],[0.35,"#9ec5f4"],[0.7,"#3987e5"],[1,"#104281"]],"hovertemplate":"%{y}\u003cbr\u003e%{x}\u003cbr\u003e%{text}\u003cextra\u003e\u003c\u002fextra\u003e","text":[["18%","23%","27%","21%","27%","27%","23%","12%","20%"],["17%","21%","21%","21%","19%","12%","15%","12%","10%"],["2%","3%","2%","3%","5%","7%","8%","15%","17%"],["20%","10%","9%","15%","17%","12%","11%","16%","12%"],["0%","0%","0%","0%","1%","4%","1%","2%","3%"],["17%","17%","18%","13%","15%","18%","23%","23%","18%"],["10%","12%","11%","6%","8%","13%","9%","7%","7%"],["16%","13%","11%","21%","9%","7%","10%","12%","13%"]],"textfont":{"size":11},"texttemplate":"%{text}","x":["Sens 1","Sens 5","Sens 20","Sens 60","Sens 120","Vol. 5","Vol. 20","Vol. 60","Vol. 120"],"xgap":2,"y":["Climat","G\u00e9opolitique","Biodiversit\u00e9","Co\u00fbts de production","Production \u002f offre","March\u00e9 et finance","Investisseurs et biais","Demande et substituts"],"ygap":2,"z":{"dtype":"f8","bdata":"n1p9VRehxz9xdwRFSuXMP7zbgpfKVtE\u002fmV3Okogeyz8rNVxQlPvQP8SwbHduK9E\u002f51\u002fKC7hjzT9hv2rYawu\u002fP8MavaCQFso\u002fbKzLTKwyxT9EtP0HXTLLPynQYR5jJ8s\u002f8c\u002frZCeQyj\u002ffVTkbzEzIP2GrSqYfSL8\u002fQLPCtS1Vwz\u002fIvQzEO+i\u002fPyGyHqCIdbg\u002fkSMPdEMvmD9i87h78lChP\u002f5ZzwbvGJk\u002fQeM7gzVAnj+3I1SN26KqP284\u002fenP5rI\u002fS\u002fPTqdbjtD+hQhnKfOXCP2+Mi3+L\u002fcU\u002fhJuBib3LyT\u002fuH\u002fFafiy6P04UE21qR7g\u002ffUJ+GnYawz9IRiuqklbFP\u002flEw07H9L0\u002f32CjGqm8vD+TI4mLuq3EP9Lbxs7wxb8\u002fsP8khTKINj\u002fjw8kqj7dXPw+K5zV4vmc\u002f8F8lYbl8aD9WdaItFN12Pw+hKbwfZKU\u002fGulcO0PIhj+WOYxFP+OYP6MNbbd675k\u002fDgd4LNnYxT8GZLlTwSLGP6HnfMnfasY\u002fYVFzZ1tawD\u002fqMnMwtSfDPzLNKswfc8Y\u002fehnoyyhxzT9w1RDxFB7NP9DnZzWeq8c\u002ffK7dPKGwuD9GDHuaEhu+PxxAk25JXbs\u002fygoJuA8tsD9cox+slI61P+mlscKDhcA\u002fIGBVE2hgtj82tlxjO7eyP7z\u002fTlg9G7E\u002fLwiKgSgexD\u002fIiUonIx7BP0O6LXNs17w\u002fTqdjFP2byj+osDsdsy22P21ddEc4i7I\u002fUVXdpfLRuD\u002f0RmKhtLm+P3mIx+\u002f6VsA\u002f","shape":"8, 9"},"zmin":0,"type":"heatmap"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"yaxis":{"autorange":"reversed","automargin":true},"xaxis":{"side":"top"},"margin":{"t":110,"l":170},"title":{"text":"Part des contributions SHAP par famille, 2010-2023"},"height":430},                        {"responsive": true}                    ).then(function(){
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="a575a4f0-ecf0-4f91-826c-0ff8327c08ab" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("a575a4f0-ecf0-4f91-826c-0ff8327c08ab")) {                    Plotly.newPlot(                        "a575a4f0-ecf0-4f91-826c-0ff8327c08ab",                        [{"colorbar":{"thickness":10},"colorscale":[[0,"#f0efec"],[0.35,"#9ec5f4"],[0.7,"#3987e5"],[1,"#104281"]],"hovertemplate":"%{y}\u003cbr\u003e%{x}\u003cbr\u003e%{text}\u003cextra\u003e\u003c\u002fextra\u003e","text":[["18%","23%","27%","21%","27%","27%","23%","12%","20%"],["17%","21%","21%","21%","19%","12%","15%","12%","10%"],["2%","3%","2%","3%","5%","7%","8%","15%","17%"],["20%","10%","9%","15%","17%","12%","11%","16%","12%"],["0%","0%","0%","0%","1%","4%","1%","2%","3%"],["17%","17%","18%","13%","15%","18%","23%","23%","18%"],["10%","12%","11%","6%","8%","13%","9%","7%","7%"],["16%","13%","11%","21%","9%","7%","10%","12%","13%"]],"textfont":{"size":11},"texttemplate":"%{text}","x":["Sens 1","Sens 5","Sens 20","Sens 60","Sens 120","Vol. 5","Vol. 20","Vol. 60","Vol. 120"],"xgap":2,"y":["Climat","G\u00e9opolitique","Biodiversit\u00e9","Co\u00fbts de production","Production \u002f offre","March\u00e9 et finance","Investisseurs et biais","Demande et substituts"],"ygap":2,"z":{"dtype":"f8","bdata":"n1p9VRehxz9xdwRFSuXMP7zbgpfKVtE\u002fmV3Okogeyz8rNVxQlPvQP8SwbHduK9E\u002f51\u002fKC7hjzT9hv2rYawu\u002fP8MavaCQFso\u002fbKzLTKwyxT9EtP0HXTLLPynQYR5jJ8s\u002f8c\u002frZCeQyj\u002ffVTkbzEzIP2GrSqYfSL8\u002fQLPCtS1Vwz\u002fIvQzEO+i\u002fPyGyHqCIdbg\u002fkSMPdEMvmD9i87h78lChP\u002f5ZzwbvGJk\u002fQeM7gzVAnj+3I1SN26KqP284\u002fenP5rI\u002fS\u002fPTqdbjtD+hQhnKfOXCP2+Mi3+L\u002fcU\u002fhJuBib3LyT\u002fuH\u002fFafiy6P04UE21qR7g\u002ffUJ+GnYawz9IRiuqklbFP\u002flEw07H9L0\u002f32CjGqm8vD+TI4mLuq3EP9Lbxs7wxb8\u002fsP8khTKINj\u002fjw8kqj7dXPw+K5zV4vmc\u002f8F8lYbl8aD9WdaItFN12Pw+hKbwfZKU\u002fGulcO0PIhj+WOYxFP+OYP6MNbbd675k\u002fDgd4LNnYxT8GZLlTwSLGP6HnfMnfasY\u002fYVFzZ1tawD\u002fqMnMwtSfDPzLNKswfc8Y\u002fehnoyyhxzT9w1RDxFB7NP9DnZzWeq8c\u002ffK7dPKGwuD9GDHuaEhu+PxxAk25JXbs\u002fygoJuA8tsD9cox+slI61P+mlscKDhcA\u002fIGBVE2hgtj82tlxjO7eyP7z\u002fTlg9G7E\u002fLwiKgSgexD\u002fIiUonIx7BP0O6LXNs17w\u002fTqdjFP2byj+osDsdsy22P21ddEc4i7I\u002fUVXdpfLRuD\u002f0RmKhtLm+P3mIx+\u002f6VsA\u002f","shape":"8, 9"},"zmin":0,"type":"heatmap"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"yaxis":{"autorange":"reversed","automargin":true},"xaxis":{"side":"top"},"margin":{"t":110,"l":170},"title":{"text":"Part des contributions SHAP par famille, 2010-2023"},"height":430},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('e9cd94f4-1592-4bff-942b-5d58d6307c7a');
+var gd = document.getElementById('a575a4f0-ecf0-4f91-826c-0ff8327c08ab');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -368,26 +622,26 @@ if (outputEl) {{
 </section>
 <section id="avant-et-depuis-2024" class="level2">
 <h2 class="anchored" data-anchor-id="avant-et-depuis-2024">Avant et depuis 2024</h2>
-<div id="f2393cb6" class="cell" data-execution_count="4">
+<div id="21bb06dc" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Voir le code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> lire(<span class="st">"shap_familles.csv"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> s[(s[<span class="st">"cible"</span>] <span class="op">==</span> <span class="st">"sens"</span>) <span class="op">&amp;</span> (s[<span class="st">"horizon"</span>] <span class="op">==</span> <span class="dv">20</span>)].pivot(index<span class="op">=</span><span class="st">"famille"</span>, columns<span class="op">=</span><span class="st">"periode"</span>, values<span class="op">=</span><span class="st">"part"</span>).reindex(<span class="bu">list</span>(FAMILLES))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> go.Figure()</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _commun <span class="im">import</span> SERIE</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, per <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">"2010-2023"</span>, <span class="st">"2024-2026"</span>]):</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    fig.add_bar(y<span class="op">=</span>[FAMILLES[f] <span class="cf">for</span> f <span class="kw">in</span> t.index], x<span class="op">=</span>t[per], orientation<span class="op">=</span><span class="st">"h"</span>, name<span class="op">=</span>per, marker_color<span class="op">=</span>SERIE[k],</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                hovertemplate<span class="op">=</span><span class="ss">f"%</span><span class="ch">{{</span><span class="ss">y</span><span class="ch">}}</span><span class="ss">&lt;br&gt;</span><span class="sc">{</span>per<span class="sc">}</span><span class="ss"> : %</span><span class="ch">{{</span><span class="ss">x:.0%</span><span class="ch">}}</span><span class="ss">&lt;extra&gt;&lt;/extra&gt;"</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>fig.update_layout(title<span class="op">=</span><span class="st">"Sens à 20 séances : part SHAP par famille, avant et depuis 2024"</span>, barmode<span class="op">=</span><span class="st">"group"</span>, bargap<span class="op">=</span><span class="fl">0.3</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                  bargroupgap<span class="op">=</span><span class="fl">0.1</span>, height<span class="op">=</span><span class="dv">430</span>, xaxis<span class="op">=</span><span class="bu">dict</span>(tickformat<span class="op">=</span><span class="st">".0%"</span>), yaxis<span class="op">=</span><span class="bu">dict</span>(autorange<span class="op">=</span><span class="st">"reversed"</span>, automargin<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                  margin<span class="op">=</span><span class="bu">dict</span>(l<span class="op">=</span><span class="dv">170</span>))</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> lire(<span class="st">"shap_familles.csv"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> s[(s[<span class="st">"cible"</span>] <span class="op">==</span> <span class="st">"sens"</span>) <span class="op">&amp;</span> (s[<span class="st">"horizon"</span>] <span class="op">==</span> <span class="dv">20</span>)].pivot(index<span class="op">=</span><span class="st">"famille"</span>, columns<span class="op">=</span><span class="st">"periode"</span>, values<span class="op">=</span><span class="st">"part"</span>).reindex(<span class="bu">list</span>(FAMILLES))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> go.Figure()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _commun <span class="im">import</span> SERIE</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, per <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">"2010-2023"</span>, <span class="st">"2024-2026"</span>]):</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    fig.add_bar(y<span class="op">=</span>[FAMILLES[f] <span class="cf">for</span> f <span class="kw">in</span> t.index], x<span class="op">=</span>t[per], orientation<span class="op">=</span><span class="st">"h"</span>, name<span class="op">=</span>per, marker_color<span class="op">=</span>SERIE[k],</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                hovertemplate<span class="op">=</span><span class="ss">f"%</span><span class="ch">{{</span><span class="ss">y</span><span class="ch">}}</span><span class="ss">&lt;br&gt;</span><span class="sc">{</span>per<span class="sc">}</span><span class="ss"> : %</span><span class="ch">{{</span><span class="ss">x:.0%</span><span class="ch">}}</span><span class="ss">&lt;extra&gt;&lt;/extra&gt;"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>fig.update_layout(title<span class="op">=</span><span class="st">"Sens à 20 séances : part SHAP par famille, avant et depuis 2024"</span>, barmode<span class="op">=</span><span class="st">"group"</span>, bargap<span class="op">=</span><span class="fl">0.3</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                  bargroupgap<span class="op">=</span><span class="fl">0.1</span>, height<span class="op">=</span><span class="dv">430</span>, xaxis<span class="op">=</span><span class="bu">dict</span>(tickformat<span class="op">=</span><span class="st">".0%"</span>), yaxis<span class="op">=</span><span class="bu">dict</span>(autorange<span class="op">=</span><span class="st">"reversed"</span>, automargin<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                  margin<span class="op">=</span><span class="bu">dict</span>(l<span class="op">=</span><span class="dv">170</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div style="height:430px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="90a223b2-a812-46ea-a6b2-d6338f18f6b5" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("90a223b2-a812-46ea-a6b2-d6338f18f6b5")) {                    Plotly.newPlot(                        "90a223b2-a812-46ea-a6b2-d6338f18f6b5",                        [{"hovertemplate":"%{y}\u003cbr\u003e2010-2023 : %{x:.0%}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2a78d6"},"name":"2010-2023","orientation":"h","x":{"dtype":"f8","bdata":"vNuCl8pW0T8p0GEeYyfLP\u002f5ZzwbvGJk\u002fThQTbWpHuD8Piuc1eL5nP6HnfMnfasY\u002fHECTbklduz9Dui1zbNe8Pw=="},"y":["Climat","G\u00e9opolitique","Biodiversit\u00e9","Co\u00fbts de production","Production \u002f offre","March\u00e9 et finance","Investisseurs et biais","Demande et substituts"],"type":"bar"},{"hovertemplate":"%{y}\u003cbr\u003e2024-2026 : %{x:.0%}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#eb6834"},"name":"2024-2026","orientation":"h","x":{"dtype":"f8","bdata":"2+iRhhCzwj8r4tW9lEvPPziL1byGqJ8\u002f95Zg6WfivD+AagC8iTpjP\u002fI6CKIeLNA\u002fVqJlW6ZWwz\u002fUeJyjIH2uPw=="},"y":["Climat","G\u00e9opolitique","Biodiversit\u00e9","Co\u00fbts de production","Production \u002f offre","March\u00e9 et finance","Investisseurs et biais","Demande et substituts"],"type":"bar"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"xaxis":{"tickformat":".0%"},"yaxis":{"autorange":"reversed","automargin":true},"margin":{"l":170},"title":{"text":"Sens \u00e0 20 s\u00e9ances : part SHAP par famille, avant et depuis 2024"},"barmode":"group","bargap":0.3,"bargroupgap":0.1,"height":430},                        {"responsive": true}                    ).then(function(){
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="bdae15f2-9af0-47e7-937b-e055f14d06ad" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("bdae15f2-9af0-47e7-937b-e055f14d06ad")) {                    Plotly.newPlot(                        "bdae15f2-9af0-47e7-937b-e055f14d06ad",                        [{"hovertemplate":"%{y}\u003cbr\u003e2010-2023 : %{x:.0%}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2a78d6"},"name":"2010-2023","orientation":"h","x":{"dtype":"f8","bdata":"vNuCl8pW0T8p0GEeYyfLP\u002f5ZzwbvGJk\u002fThQTbWpHuD8Piuc1eL5nP6HnfMnfasY\u002fHECTbklduz9Dui1zbNe8Pw=="},"y":["Climat","G\u00e9opolitique","Biodiversit\u00e9","Co\u00fbts de production","Production \u002f offre","March\u00e9 et finance","Investisseurs et biais","Demande et substituts"],"type":"bar"},{"hovertemplate":"%{y}\u003cbr\u003e2024-2026 : %{x:.0%}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#eb6834"},"name":"2024-2026","orientation":"h","x":{"dtype":"f8","bdata":"2+iRhhCzwj8r4tW9lEvPPziL1byGqJ8\u002f95Zg6WfivD+AagC8iTpjP\u002fI6CKIeLNA\u002fVqJlW6ZWwz\u002fUeJyjIH2uPw=="},"y":["Climat","G\u00e9opolitique","Biodiversit\u00e9","Co\u00fbts de production","Production \u002f offre","March\u00e9 et finance","Investisseurs et biais","Demande et substituts"],"type":"bar"}],                        {"template":{"layout":{"colorway":["#2a78d6","#eb6834","#1baf7a","#eda100","#e87ba4","#008300","#6250d6","#e34948"],"font":{"color":"#52514e","family":"system-ui, -apple-system, \"Segoe UI\", sans-serif","size":13},"hoverlabel":{"bgcolor":"white","bordercolor":"#c3c2b7","font":{"color":"#0b0b0b"}},"legend":{"orientation":"h","title":{"text":""},"x":0,"y":1.02,"yanchor":"bottom"},"margin":{"b":50,"l":60,"r":20,"t":70},"paper_bgcolor":"#fcfcfb","plot_bgcolor":"#fcfcfb","separators":", ","title":{"font":{"color":"#0b0b0b","size":16},"x":0,"xanchor":"left"},"xaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"},"yaxis":{"gridcolor":"#e1e0d9","linecolor":"#c3c2b7","tickfont":{"color":"#898781"},"zerolinecolor":"#c3c2b7"}}},"xaxis":{"tickformat":".0%"},"yaxis":{"autorange":"reversed","automargin":true},"margin":{"l":170},"title":{"text":"Sens \u00e0 20 s\u00e9ances : part SHAP par famille, avant et depuis 2024"},"barmode":"group","bargap":0.3,"bargroupgap":0.1,"height":430},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('90a223b2-a812-46ea-a6b2-d6338f18f6b5');
+var gd = document.getElementById('bdae15f2-9af0-47e7-937b-e055f14d06ad');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
