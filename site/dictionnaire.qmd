@@ -1,0 +1,139 @@
+---
+title: "Dictionnaire des variables"
+page-layout: full
+toc: false
+---
+
+Les **328 colonnes** du jeu de données, une par ligne. Cherchez par nom ou par description, filtrez, triez en cliquant sur un en-tête, et **cliquez sur une ligne** pour ouvrir sa fiche complète.
+
+Chaque fiche est construite par `scripts/45_dictionnaire_qualite.py` à partir du code de collecte. Périodes, complétude et contrôles sont calculés sur les données réelles. Ce qui n'est pas documenté dans le code est marqué « Non documenté ».
+
+::: {.callout-note collapse="true"}
+## Comment lire « intérêt pour la prévision »
+
+Aucun horizon n'est attribué à la main. La fiche rapporte trois mesures différentes, qui ne prouvent aucune causalité :
+
+1. **Rang SHAP** : le meilleur rang des variables dérivées de cette colonne dans le modèle, par cible et horizon (par exemple « sens 20 : 12/142 »). Il dit sur quoi le modèle s'appuie, pas si cela améliore la prévision.
+2. **Association** : les corrélations de rang retenues avec la cible future, dans l'échantillon 2010-2026, après correction des tests multiples.
+3. **Perte au retrait de la famille**, hors échantillon. Une valeur positive avec astérisque signifie que la famille aide le modèle de façon nette.
+
+Dans tous les cas, **aucun modèle à facteurs ne bat le benchmark** sans facteurs : l'intérêt prédictif reste une hypothèse à tester.
+:::
+
+```{python}
+#| echo: false
+import json
+import pandas as pd
+from IPython.display import HTML
+from _commun import FAMILLES, lire
+
+d = lire("dictionnaire_variables.csv")
+c = lire("controles_colonnes.csv").set_index("variable")
+a = lire("association_variables.csv")
+a = a[a["retenue_fdr_5pct"]]
+ROLES = {"variable": "Variable de modèle", "robustesse": "Robustesse", "cible": "Cible", "prix_cible": "Prix de référence", "controle": "Contrôle"}
+FAM = FAMILLES | {"cible": "Cibles", "hors_famille": "Contrôles"}
+
+
+def associations(v):
+    if v == "cacao_close":
+        x = a[a["variable"].str.match(r"cacao_(close_r|vol)\d+")]
+    else:
+        x = a[a["variable"].str.startswith(v + "_") | (a["variable"] == v)]
+    if x.empty:
+        return "Aucune association retenue"
+    return " ; ".join(f"{'rendement' if r.cible == 'rendement' else 'vol.'} {r.horizon} : {r.rho:+.2f} ({r.variable})" for r in x.itertuples())
+
+
+lignes = []
+for r in d.itertuples():
+    k = c.loc[r.variable] if r.variable in c.index else None
+    lignes.append({
+        "v": r.variable, "sig": r.signification, "fam": FAM.get(r.famille, r.famille), "unite": r.unite,
+        "freq": str(r.frequence_native).split(" ")[0].split("(")[0].strip(), "src": str(r.source).split(" (")[0].split(",")[0].split(" via")[0],
+        "role": ROLES.get(r.role, r.role),
+        "fiche": {
+            "Signification": r.signification, "Formule de calcul": r.formule, "Unité": r.unite, "Fréquence native": r.frequence_native,
+            "Fréquence dans le dataset": r.frequence_dataset, "Fréquence observée (changements de valeur)": r.frequence_observee,
+            "Source": r.source,
+            "Période disponible": f"{r.premiere_date} → {r.derniere_date} ({int(r.n_valides) if pd.notna(r.n_valides) else 0} valeurs)" if pd.notna(r.premiere_date) else "Vide",
+            "Complétude sur sa période": f"{r.completude_dans_periode:.1%}" if pd.notna(r.completude_dans_periode) else "Non documenté",
+            "Plus long trou (séances)": str(int(k["plus_long_trou_seances"])) if k is not None and pd.notna(k.get("plus_long_trou_seances")) else "Non documenté",
+            "Valeurs extrêmes (> 8 écarts absolus médians)": str(int(k["valeurs_extremes_8mad"])) if k is not None and pd.notna(k.get("valeurs_extremes_8mad")) else "Non documenté",
+            "Valeurs manquantes": r.manquants, "Transformation": r.transformation, "Décalage temporel appliqué": r.decalage,
+            "Date réelle de publication": r.publication, "Utilisation dans les modèles": r.utilisation, "Rôle": ROLES.get(r.role, r.role),
+            "Intérêt pour la prévision": r.interet_prevision,
+            "Rang SHAP des variables dérivées": r.rang_shap_par_horizon if isinstance(r.rang_shap_par_horizon, str) else "Sans variable dérivée dans le modèle",
+            "Association retenue avec la cible future": associations(r.variable) if r.role in ("variable", "prix_cible") else "Sans objet",
+            "Perte au retrait de la famille (hors échantillon)": r.perte_retrait_famille if isinstance(r.perte_retrait_famille, str) else "Sans objet",
+        }})
+HTML(f"<script>window.DICO = {json.dumps(lignes, ensure_ascii=False)};</script>")
+```
+
+```{=html}
+<style>
+#dico-filtres{display:flex;flex-wrap:wrap;gap:.5em;margin:.5em 0 .8em}
+#dico-filtres input,#dico-filtres select{padding:.35em .5em;border:1px solid #c3c2b7;border-radius:4px;font-size:.92em;background:#fff}
+#dico-filtres input{flex:1 1 260px}
+#dico-table{width:100%;border-collapse:collapse;font-size:.88em}
+#dico-table th{position:sticky;top:0;background:#f9f9f7;text-align:left;padding:.45em;border-bottom:2px solid #c3c2b7;cursor:pointer;white-space:nowrap}
+#dico-table td{padding:.4em .45em;border-bottom:1px solid #e1e0d9;vertical-align:top}
+#dico-table tbody tr{cursor:pointer}
+#dico-table tbody tr:hover{background:#eef4fc}
+#dico-table code{font-size:.95em}
+#dico-compte{color:#52514e;font-size:.88em;margin-bottom:.4em}
+#dico-fiche{position:fixed;top:64px;right:0;width:min(560px,100vw);height:calc(100vh - 64px);overflow:auto;background:#fff;box-shadow:-4px 0 18px rgba(0,0,0,.18);
+  padding:1.2em 1.4em 2em;z-index:2000;display:none}
+#dico-fiche h3{margin-top:0;word-break:break-all}
+#dico-fiche dt{font-weight:600;color:#0b0b0b;margin-top:.7em;font-size:.9em}
+#dico-fiche dd{margin:0;color:#52514e;font-size:.9em}
+#dico-fermer{float:right;border:1px solid #c3c2b7;background:#fff;border-radius:4px;padding:.2em .6em;cursor:pointer}
+.dico-wrap{max-height:70vh;overflow:auto;border:1px solid #e1e0d9;border-radius:6px}
+</style>
+<div id="dico-filtres">
+  <input id="f-texte" type="search" placeholder="Rechercher un nom ou une description…" aria-label="Recherche">
+  <select id="f-fam" aria-label="Famille"><option value="">Toutes les familles</option></select>
+  <select id="f-freq" aria-label="Fréquence"><option value="">Toutes les fréquences</option></select>
+  <select id="f-src" aria-label="Source"><option value="">Toutes les sources</option></select>
+  <select id="f-role" aria-label="Rôle"><option value="">Tous les rôles</option></select>
+</div>
+<div id="dico-compte"></div>
+<div class="dico-wrap"><table id="dico-table">
+  <thead><tr><th data-k="v">Variable ↕</th><th data-k="sig">Signification ↕</th><th data-k="fam">Famille ↕</th><th data-k="unite">Unité ↕</th><th data-k="freq">Fréquence ↕</th><th data-k="src">Source ↕</th><th data-k="role">Rôle ↕</th></tr></thead>
+  <tbody></tbody>
+</table></div>
+<aside id="dico-fiche" role="dialog" aria-label="Fiche de la variable"><button id="dico-fermer">Fermer ✕</button><div id="dico-contenu"></div></aside>
+<script>
+(function(){
+  const D = window.DICO || [];
+  const $ = id => document.getElementById(id);
+  const echap = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let tri = {k:'v', sens:1};
+  function remplir(id, cle){ [...new Set(D.map(x => x[cle]))].sort((a,b)=>a.localeCompare(b,'fr')).forEach(v => { const o=document.createElement('option'); o.value=v; o.textContent=v; $(id).appendChild(o); }); }
+  remplir('f-fam','fam'); remplir('f-freq','freq'); remplir('f-src','src'); remplir('f-role','role');
+  function afficher(){
+    const t = $('f-texte').value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+    const f = {fam:$('f-fam').value, freq:$('f-freq').value, src:$('f-src').value, role:$('f-role').value};
+    const rows = D.filter(x => (!t || (x.v + ' ' + x.sig).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(t))
+      && Object.entries(f).every(([k,v]) => !v || x[k] === v))
+      .sort((a,b) => tri.sens * String(a[tri.k]).localeCompare(String(b[tri.k]), 'fr', {numeric:true}));
+    $('dico-compte').textContent = rows.length + ' colonne' + (rows.length > 1 ? 's' : '') + ' sur ' + D.length;
+    $('dico-table').querySelector('tbody').innerHTML = rows.map(x => `<tr data-v="${echap(x.v)}"><td><code>${echap(x.v)}</code></td><td>${echap(x.sig)}</td><td>${echap(x.fam)}</td><td>${echap(x.unite)}</td><td>${echap(x.freq)}</td><td>${echap(x.src)}</td><td>${echap(x.role)}</td></tr>`).join('');
+  }
+  function ouvrir(v){
+    const x = D.find(y => y.v === v); if(!x) return;
+    $('dico-contenu').innerHTML = `<h3><code>${echap(x.v)}</code></h3><p style="color:#52514e">${echap(x.fam)} · ${echap(x.role)}</p><dl>` +
+      Object.entries(x.fiche).map(([k,val]) => `<dt>${echap(k)}</dt><dd>${echap(val)}</dd>`).join('') + '</dl>';
+    $('dico-fiche').style.display = 'block';
+    history.replaceState(null, '', '#' + encodeURIComponent(v));
+  }
+  ['f-texte','f-fam','f-freq','f-src','f-role'].forEach(id => $(id).addEventListener('input', afficher));
+  $('dico-table').querySelector('thead').addEventListener('click', e => { const k = e.target.dataset.k; if(!k) return; tri = {k, sens: tri.k === k ? -tri.sens : 1}; afficher(); });
+  $('dico-table').querySelector('tbody').addEventListener('click', e => { const tr = e.target.closest('tr'); if(tr) ouvrir(tr.dataset.v); });
+  $('dico-fermer').addEventListener('click', () => { $('dico-fiche').style.display = 'none'; history.replaceState(null, '', location.pathname); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') $('dico-fermer').click(); });
+  afficher();
+  if(location.hash) ouvrir(decodeURIComponent(location.hash.slice(1)));
+})();
+</script>
+```

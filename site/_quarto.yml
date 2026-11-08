@@ -12,8 +12,12 @@ website:
         text: Accueil
       - href: marche.qmd
         text: Marché du jour
-      - href: donnees.qmd
-        text: Données
+      - text: Données
+        menu:
+          - href: donnees.qmd
+            text: Vue d'ensemble et familles
+          - href: dictionnaire.qmd
+            text: Dictionnaire des 328 variables
       - href: resultats.qmd
         text: Résultats
       - href: familles.qmd

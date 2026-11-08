@@ -110,12 +110,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
+
+
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
 <script>
+
 window.PlotlyConfig = {MathJaxConfig: 'local'};
+
 if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+
 </script>
+
 <script type="module">import "https://cdn.plot.ly/plotly-4.1.1.min"</script>
+
+
 
 
 
@@ -146,10 +155,21 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
     <a class="nav-link" href="./marche.html"> 
 <span class="menu-text">Marché du jour</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./donnees.html"> 
-<span class="menu-text">Données</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-données" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Données</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-données">    
+        <li>
+    <a class="dropdown-item" href="./donnees.html">
+ <span class="dropdown-text">Vue d’ensemble et familles</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./dictionnaire.html">
+ <span class="dropdown-text">Dictionnaire des 328 variables</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./resultats.html"> 
 <span class="menu-text">Résultats</span></a>

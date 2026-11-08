@@ -1,0 +1,4 @@
+seuil_pct,n_extremes,dont_jours_de_saut,part_saut
+5.0,190,19,0.1
+8.0,44,6,0.13636363636363635
+10.0,15,3,0.2

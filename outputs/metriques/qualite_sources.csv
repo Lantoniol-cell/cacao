@@ -1,0 +1,20 @@
+famille,source,attendu,recu,valide,manquant,completude,derniere_recuperation,derniere_date_couverte,statut,note
+marche_finance,Yahoo Finance (19 séries),19,19,19,0,1.0,2026-11-04,2026-11-03,COMPLET,"dont 2 non utilisées par les modèles (réal, sol) et EUR/XOF de contrôle"
+marche_finance,"Banque mondiale, Pink Sheet",1,1,1,0,1.0,2026-11-04,Mensuelle (voir PRIX_),COMPLET,
+climat,"NASA POWER, 7 variables",349,349,349,0,1.0,2026-11-06,2026-11-05,COMPLET,
+climat,"NASA POWER, rayonnement et vent",349,349,349,0,1.0,2026-11-07,2026-11-06,COMPLET,
+climat,ERA5 pluie (Open-Meteo),349,349,349,0,1.0,2026-11-07,2026-10-30,COMPLET,
+climat,"ERA5 contrôle, 14 points",14,14,14,0,1.0,2026-11-07,2026-10-31,COMPLET,
+climat,"CHIRPS, points",349,349,349,0,1.0,2026-11-07,2026-09-01,COMPLET,"2 points indonésiens sans donnée (IDN_008, IDN_013) : fichiers présents mais vides"
+climat,NOAA ONI,1,1,1,0,1.0,2026-11-06,saison ASO 2026,COMPLET,
+climat,NOAA GEFS pluie,7981,7981,7981,0,1.0,2026-11-08,2026-11-07,COMPLET,"une échéance absente (2020-08-28, jour 7), période écartée"
+climat,NOAA GEFS Tmax,7981,7981,7981,0,1.0,2026-11-08,2026-11-07,COMPLET,
+biodiversite,NASA FIRMS 2005-2025,189,189,189,0,1.0,2026-11-06,2025-12-31,COMPLET,
+biodiversite,NASA FIRMS 2026,9,0,0,9,0.0,Non documenté,Non documenté,NON APPLICABLE,clé d'accès gratuite non créée : source non interrogée
+biodiversite,FAOSTAT pesticides et azote,2,2,2,0,1.0,2026-11-06,2024 (annuel),COMPLET,
+production_offre,FAOSTAT cacao,1,1,1,0,1.0,2026-11-04,2024 (annuel),COMPLET,
+investisseurs_biais,CFTC (2 rapports),2,2,2,0,1.0,2026-11-07,2026-11-03,COMPLET,
+investisseurs_biais,Google Trends,1,1,1,0,1.0,2026-11-07,2026-10-01,COMPLET,
+investisseurs_biais,GDELT presse cacao (API),4,4,4,0,1.0,2026-11-07,2026-11-07,COMPLET,"2 séries de tensions par mots-clés abandonnées (blocage 429), couvertes par les fichiers bruts"
+geopolitique,GPR quotidien et mensuel,2,2,2,0,1.0,2026-11-07,"quotidien 2026-11-02, mensuel 2026-10",COMPLET,
+geopolitique,GDELT événements bruts,5056,5032,5032,24,0.995253164556962,2026-11-07,2026-11-06,INCOMPLET,"annuel 2005, mensuel 2006 à mars 2013, quotidien ensuite ; un jour absent n'est pas une erreur (trous connus de GDELT)"

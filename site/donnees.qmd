@@ -3,18 +3,221 @@ title: "Données"
 ---
 
 ```{python}
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from _commun import DATASET, RACINE, SERIE, MUET, ENCRE_2, lire, tableau
+from IPython.display import HTML, Markdown
+from _commun import DATASET, RACINE, SERIE, MUET, ENCRE_2, FAMILLES, lire, tableau
 
 d = pd.read_parquet(DATASET)
 ev = pd.read_csv(RACINE / "config" / "evenements.csv", parse_dates=["date"])
 part = pd.read_csv(RACINE / "outputs" / "metriques" / "t2_poids_pays.csv", index_col=0)
+dico = lire("dictionnaire_variables.csv")
+asso = lire("association_variables.csv")
+retrait = lire("retrait_familles.csv")
+qual = lire("qualite_sources.csv")
+ctrl = lire("controles_colonnes.csv")
+
+
+def tuiles(elements):
+    """Tuiles de chiffres cles, en HTML simple et responsive."""
+    cases = "".join(f'<div style="flex:1 1 150px;border:1px solid #e1e0d9;border-radius:6px;padding:.7em .9em;background:#fcfcfb">'
+                    f'<div style="font-size:1.5em;font-weight:600;color:#0b0b0b">{v}</div>'
+                    f'<div style="font-size:.85em;color:#52514e">{t}</div></div>' for v, t in elements)
+    return HTML(f'<div style="display:flex;flex-wrap:wrap;gap:.6em;margin:.5em 0 1em">{cases}</div>')
 ```
 
 Cette page présente les principales séries utilisées pour expliquer le prix du cacao. Le projet en compte 28 au total, regroupées en 8 familles. Toutes sont alignées sur les jours de cotation du cacao, du 3 janvier 2005 au 3 novembre 2026, soit 5 489 séances.
 
 **Règle de base :** une donnée n'est utilisée qu'**après sa publication**. Par exemple, la pluie d'octobre n'est publiée que fin novembre : le modèle ne la voit qu'à partir de cette date. Sans cette règle, le modèle « tricherait » en utilisant des informations que personne ne connaissait encore.
+
+**À quoi sert cette page.** Le but du projet est d'**anticiper le cours futur du cacao**. Cette page sert à comprendre chaque donnée : ce qu'elle mesure, quand elle devient disponible, par quel mécanisme elle pourrait agir sur le prix, et ce que les tests ont réellement montré. Le détail des 328 colonnes est dans le [dictionnaire des variables](dictionnaire.qmd).
+
+## Vue d'ensemble du jeu de données
+
+```{python}
+modele = dico[dico["role"] == "variable"]
+n_sources = 12  # Yahoo, Banque mondiale, NASA POWER, ERA5, CHIRPS, NOAA, NASA FIRMS, FAOSTAT, CFTC, Google Trends, GDELT, Caldara-Iacoviello
+tuiles([("28", "jeux de données sources"), ("8", "familles de facteurs"), (f"{d.shape[1]}", "colonnes dans le dataset"),
+        (f"{len(d):,}".replace(",", " "), "séances de cotation"), (f"{d.index[0]:%Y}-{d.index[-1]:%Y}", f"du {d.index[0]:%d/%m/%Y} au {d.index[-1]:%d/%m/%Y}"),
+        (str(n_sources), "organismes sources"), (f"{modele['completude_dans_periode'].mean():.0%}", "complétude moyenne des variables, sur leur période")])
+```
+
+```{python}
+r = dico["role"].map({"variable": "Variable de modèle", "robustesse": "Tests de robustesse", "cible": "Cible à prévoir",
+                      "prix_cible": "Prix (base des cibles)", "controle": "Contrôle qualité"})
+t = pd.crosstab(dico["famille"].map(FAMILLES).fillna("Cibles et contrôles"), r)
+fig = go.Figure()
+for k, col in enumerate([c for c in ["Variable de modèle", "Tests de robustesse", "Prix (base des cibles)", "Cible à prévoir", "Contrôle qualité"] if c in t]):
+    fig.add_bar(y=t.index, x=t[col], orientation="h", name=col, marker_color=SERIE[k], hovertemplate=f"%{{y}}<br>{col} : %{{x}}<extra></extra>")
+fig.update_layout(title="Les 328 colonnes par famille et par rôle", barmode="stack", height=400, yaxis=dict(categoryorder="total ascending", automargin=True),
+                  xaxis_title="Nombre de colonnes")
+fig.show()
+```
+
+Une colonne brute n'est pas toujours une variable de modèle. La famille climat compte 181 colonnes, mais beaucoup servent aux tests de robustesse (pluie NASA, prévisions GEFS) ou concernent des pays non retenus. Les modèles reçoivent environ 140 variables transformées, calculées à partir de ces colonnes (page [Familles](familles.qmd)).
+
+```{python}
+f = dico.assign(debut=pd.to_datetime(dico["premiere_date"]), fin=pd.to_datetime(dico["derniere_date"]))
+f = f[f["role"] == "variable"].groupby("famille").agg(debut=("debut", "min"), fin=("fin", "max"), debut_med=("debut", "median"), n=("variable", "size"))
+f = f.sort_values("debut", ascending=False)
+fig = go.Figure()
+for i, (fam, x) in enumerate(f.iterrows()):
+    fig.add_scatter(x=[x["debut"], x["fin"]], y=[FAMILLES[fam]] * 2, mode="lines", line=dict(width=10, color=SERIE[0]), showlegend=False,
+                    hovertemplate=f"{FAMILLES[fam]}<br>Disponible du {x['debut']:%m/%Y} au {x['fin']:%m/%Y}<br>{x['n']} colonnes<extra></extra>")
+    fig.add_scatter(x=[x["debut_med"]], y=[FAMILLES[fam]], mode="markers", marker=dict(size=9, color=SERIE[1], symbol="line-ns-open", line=dict(width=3)),
+                    showlegend=False, hovertemplate=f"Moitié des colonnes disponibles à partir de %{{x|%m/%Y}}<extra></extra>")
+fig.add_vline(x="2010-01-01", line=dict(color=MUET, dash="dot"))
+fig.add_annotation(x="2010-01-01", y=1.02, yref="paper", text="Début des tests (2010)", showarrow=False, xanchor="left", font=dict(color=ENCRE_2, size=11))
+fig.update_layout(title="Disponibilité historique des variables de modèle, par famille", height=360, yaxis=dict(automargin=True))
+fig.show()
+```
+
+Le trait bleu va de la première à la dernière donnée de la famille. Le repère orange marque la date à laquelle la moitié de ses colonnes est disponible. Certaines séries commencent tard : la presse GDELT en 2017, les anomalies ERA5 en 2008 (il faut 3 ans de passé). Les premiers modèles, entraînés avant 2010, en disposent donc moins.
+
+```{python}
+fr = dico[dico["role"].isin(["variable", "robustesse"])]["frequence_native"].str.extract(r"^(\w+)")[0].value_counts()
+Markdown("**Fréquence native des variables** (avant alignement sur les séances) : " + ", ".join(f"{k.lower()} {v}" for k, v in fr.items()) + ".")
+```
+
+## Les 8 familles de données
+
+Pour chaque famille : ce qu'elle mesure, par quel **canal** elle pourrait agir sur le prix, avec quel **délai**, et ce que les tests ont montré. Les canaux et les délais sont des **hypothèses économiques**, pas des causalités démontrées.
+
+- **Canaux :** offre et demande directes, coûts de production (indirect), anticipations des investisseurs (financier), chocs et changements de régime.
+- **Délais :** immédiat (jours), différé (mois), structurel (années).
+
+```{python}
+INFOS = {
+    "climat": ("Offre directe ; chocs climatiques (El Niño)", "Différé : la météo d'une saison agit sur la récolte des mois suivants",
+               "Une pluie ou une chaleur anormale dans les zones de culture pourrait réduire la récolte à venir ; le marché réagirait dès qu'il l'anticipe.",
+               "CHIRPS_ANOM3M_MONDE", "Pluie mondiale sur 3 mois, écart à la normale (écarts-types)"),
+    "geopolitique": ("Chocs et changements de régime", "Immédiat, pour un blocage des exportations ou une crise politique",
+                     "Une crise dans un pays producteur peut interrompre les exportations ou changer les règles du marché intérieur.",
+                     "GPR_GPRD", "Indice de risque géopolitique mondial (GPR)"),
+    "biodiversite": ("Offre directe, à long terme", "Structurel : l'état des sols et des forêts agit sur plusieurs années",
+                     "Incendies, appauvrissement des sols ou baisse des intrants pourraient réduire les rendements futurs.",
+                     "FEUX_CIV", "Feux de végétation détectés en Côte d'Ivoire, par jour"),
+    "couts_production": ("Coûts de production (indirect)", "Différé : coûts des intrants et du transport",
+                         "Énergie, engrais et monnaies changent ce que coûte produire et exporter, et ce que gagnent les planteurs.",
+                         "PRIX_UREE", "Prix mondial de l'urée (logarithme)"),
+    "production_offre": ("Offre directe", "Différé et ancien : la production annuelle n'est connue qu'à N+2",
+                         "Moins de cacao récolté devrait faire monter le prix, mais le chiffre officiel arrive bien après le marché.",
+                         "FAO_PRODUCTION_CIV", "Production de la Côte d'Ivoire (t), FAOSTAT"),
+    "marche_finance": ("Anticipations et dynamique du marché", "Immédiat",
+                       "Le passé récent du prix, sa volatilité, le dollar et les taux orientent les décisions des acheteurs et des spéculateurs.",
+                       "cacao_close", "Volatilité du cacao sur 60 séances (annualisée)"),
+    "investisseurs_biais": ("Anticipations des investisseurs ; amplification des chocs", "Immédiat",
+                            "Les fonds peuvent amplifier les mouvements ; l'attention du public et des médias accompagne les excès.",
+                            "CFTC_NET_FONDS", "Position nette des fonds gérés (part de l'intérêt ouvert)"),
+    "demande_substituts": ("Demande directe et produits proches", "Différé",
+                           "Les chocolatiers sont les acheteurs finaux ; sucre, huile de palme et café partagent régions, coûts ou usages.",
+                           "PRIX_SUCRE", "Prix mondial du sucre (logarithme)"),
+}
+```
+
+::: {.panel-tabset}
+
+```{python}
+#| output: asis
+for fam, (canal, delai, mecanisme, serie, titre) in INFOS.items():
+    sous = dico[(dico["famille"] == fam) & (dico["role"] == "variable")]
+    sources = sorted(set(sous["source"].str.split(r" \(| via | :").str[0]))
+    freq = sorted(set(sous["frequence_native"].str.extract(r"^(\w+)")[0].dropna()))
+    debut, fin = pd.to_datetime(sous["premiere_date"]).min(), pd.to_datetime(sous["derniere_date"]).max()
+    a = asso[asso["famille"] == fam]
+    b_rend = int(a[a["cible"] == "rendement"]["retenue_fdr_5pct"].sum())
+    b_vol = int(a[a["cible"] == "vol"]["retenue_fdr_5pct"].sum())
+    n_mod = a["variable"].nunique()
+    rr = retrait[retrait["famille"] == fam]
+    aide = rr[rr["ic_bas"] > 0]
+    nuit = rr[rr["ic_haut"] < 0]
+    aide_txt = ", ".join(f"{'sens' if c == 'sens' else 'volatilité'} {h}" for c, h in zip(aide["cible"], aide["horizon"])) or "aucune cible"
+    nuit_txt = ", ".join(f"{'sens' if c == 'sens' else 'volatilité'} {h}" for c, h in zip(nuit["cible"], nuit["horizon"]))
+    print(f"\n### {FAMILLES[fam]}\n")
+    print(f"**Mécanisme supposé.** {mecanisme}\n")
+    print(f"| Élément | Contenu |\n|---|---|\n| Canal | {canal} |\n| Délai d'effet supposé | {delai} |"
+          f"\n| Colonnes du dataset | {len(sous)} colonnes brutes (tous pays), qui donnent {n_mod} variables transformées dans le modèle ; détail dans le [dictionnaire](dictionnaire.qmd) |"
+          f"\n| Sources | {', '.join(sources)} |\n| Fréquence native | {', '.join(f.lower() for f in freq)} |"
+          f"\n| Délai de publication appliqué | {'; '.join(sorted(set(sous['decalage'])))[:300]} |"
+          f"\n| Période disponible | {debut:%m/%Y} à {fin:%m/%Y} |\n")
+    print("**Ce que les tests ont montré.**\n")
+    print(f"- **A. Pertinence économique :** mécanisme plausible (hypothèse ci-dessus), non démontré.")
+    print(f"- **B. Information statistique** (association dans l'échantillon 2010-2026, correction des tests multiples) : "
+          f"{b_rend} association retenue sur {n_mod * 5} avec le **rendement futur**, {b_vol} sur {n_mod * 4} avec la **volatilité future**.")
+    print(f"- **C. Pouvoir prédictif hors échantillon :** la retirer dégrade nettement le modèle pour : {aide_txt}."
+          + (f" La retirer l'**améliore** pour : {nuit_txt}." if nuit_txt else "")
+          + " Mais aucun modèle à facteurs ne bat le benchmark : la famille n'apporte **pas de gain démontré** face à un modèle sans facteurs.\n")
+    print(f"\n```{{=html}}\n<div id='apercu-{fam}'></div>\n```\n")
+```
+
+:::
+
+```{python}
+# Apercus : une serie representative par famille, dessinee dans l'onglet correspondant.
+import json, plotly.io as pio
+figs = {}
+for fam, (_, _, _, serie, titre) in INFOS.items():
+    s = d[serie]
+    if serie == "cacao_close":
+        s = np.log(s).diff().rolling(60).std() * np.sqrt(252)
+    elif serie.startswith("PRIX_"):
+        s = np.exp(s)
+    elif serie == "FEUX_CIV":
+        s = s.rolling(30).sum()
+        titre = "Feux de végétation en Côte d'Ivoire, cumul sur 30 jours"
+    elif serie == "GPR_GPRD":
+        s = s.rolling(20).mean()
+        titre += ", moyenne sur 20 séances"
+    s = s.dropna()
+    g = go.Figure(go.Scatter(x=s.index, y=s, mode="lines", line=dict(width=1.6, color=SERIE[0]), hovertemplate="%{x|%d/%m/%Y} : %{y:,.2f}<extra></extra>"))
+    g.update_layout(title=dict(text=titre, font=dict(size=13)), height=260, margin=dict(t=40, b=30, l=55, r=15), showlegend=False)
+    figs[fam] = json.loads(pio.to_json(g, validate=False))
+HTML("<script>window.APERCUS=" + json.dumps(figs) + ";(function(){function dessiner(){if(!window.Plotly){return setTimeout(dessiner,300);} "
+     "for(const k in window.APERCUS){const el=document.getElementById('apercu-'+k);if(el&&!el.dataset.ok){const f=window.APERCUS[k];"
+     "Plotly.newPlot(el,f.data,f.layout,{responsive:true,displaylogo:false});el.dataset.ok=1;}}} "
+     "document.addEventListener('shown.bs.tab',()=>{for(const k in window.APERCUS){const el=document.getElementById('apercu-'+k);if(el&&el.dataset.ok){Plotly.Plots.resize(el);}}});"
+     "window.addEventListener('load',dessiner);})();</script>")
+```
+
+## Des données à la prévision
+
+Une donnée peut avoir un sens économique fort sans améliorer la prévision du prix. Trois mesures sont à distinguer, et aucune ne prouve une causalité :
+
+| Mesure | Question | Où elle est calculée |
+|---|---|---|
+| **Importance dans le modèle** (SHAP) | Sur quoi le modèle s'appuie-t-il ? | Page [Familles](familles.qmd) |
+| **Association statistique** | La variable varie-t-elle avec le prix futur, dans l'échantillon ? | Ci-dessous |
+| **Contribution marginale hors échantillon** (retrait de famille) | Le modèle prévoit-il moins bien sans elle ? | Page [Familles](familles.qmd) |
+
+```{python}
+lignes = []
+for fam in FAMILLES:
+    a = asso[asso["famille"] == fam]
+    rr = retrait[retrait["famille"] == fam]
+    for cible, h in [("rendement", h) for h in (1, 5, 20, 60, 120)] + [("vol", h) for h in (5, 20, 60, 120)]:
+        x = a[(a["cible"] == cible) & (a["horizon"] == h)]
+        y = rr[(rr["cible"] == ("sens" if cible == "rendement" else "vol")) & (rr["horizon"] == h)]
+        lignes.append({"famille": FAMILLES[fam], "cible": f"{'Sens' if cible == 'rendement' else 'Vol.'} {h}",
+                       "assoc": int(x["retenue_fdr_5pct"].sum()), "n": len(x),
+                       "perte": float(y["perte"].iloc[0]) if len(y) else np.nan, "sig": bool(len(y) and (y["ic_bas"].iloc[0] > 0 or y["ic_haut"].iloc[0] < 0))})
+t = pd.DataFrame(lignes)
+ordre = [f"Sens {h}" for h in (1, 5, 20, 60, 120)] + [f"Vol. {h}" for h in (5, 20, 60, 120)]
+m = t.pivot(index="famille", columns="cible", values="assoc").reindex(columns=ordre)
+txt = t.assign(v=t["assoc"].astype(str) + "/" + t["n"].astype(str)).pivot(index="famille", columns="cible", values="v").reindex(columns=ordre)
+fig = go.Figure(go.Heatmap(z=m.to_numpy(), x=ordre, y=m.index, colorscale=[[0, "#f0efec"], [1, "#2a78d6"]], text=txt.to_numpy(),
+                           texttemplate="%{text}", xgap=2, ygap=2, colorbar=dict(thickness=10, title="Variables"),
+                           hovertemplate="%{y}<br>%{x}<br>Associations retenues : %{text}<extra></extra>"))
+fig.update_layout(title="Information statistique : variables associées à la cible future (correction des tests multiples)", height=400,
+                  xaxis=dict(side="top"), yaxis=dict(automargin=True, autorange="reversed"), margin=dict(t=110))
+fig.show()
+```
+
+**Ce que montre ce tableau.**
+
+- **Rendement futur :** 2 associations sur 710 essais (sens à 5 séances : variation des positions des producteurs ; sens à 120 séances : azote en Côte d'Ivoire). C'est à peine plus que ce que le hasard produirait, et cela ne s'est pas traduit par de meilleures prévisions hors échantillon.
+- **Volatilité future :** de nombreuses variables lui sont associées, surtout la volatilité passée du cacao, le risque géopolitique et la presse. Mais une partie de ces associations reflète simplement la période de crise, où tout est agité en même temps. Hors échantillon, le modèle HAR, qui n'utilise que la volatilité passée, reste le meilleur.
+- **Lecture d'ensemble :** les données contiennent de l'information sur l'**ampleur** des mouvements, déjà captée par le prix passé. Elles n'en contiennent presque pas sur leur **sens**. C'est la raison pour laquelle aucune famille ne permet de battre les modèles sans facteurs (pages [Résultats](resultats.qmd) et [Pistes exploratoires](exploratoire.qmd)).
 
 ## Le prix du cacao
 
@@ -57,6 +260,85 @@ tableau(t[["n", "date", "evenement", "source", "statut"]].rename(columns={"n": "
 ```
 
 **Un piège technique.** CC=F enchaîne les contrats : quand une échéance expire, Yahoo passe à la suivante, et le prix peut sauter sans vrai mouvement du marché, jusqu'à 30 % en 2024. Les modèles en tiennent compte grâce à une **lecture de contrôle**, qui retire ces sauts (page [Méthode](methode.qmd)).
+
+### La qualité de la série CC=F, cible des modèles
+
+**Comment Yahoo construit CC=F.** CC=F suit un seul contrat à la fois, l'échéance proche, puis passe au suivant. Les prix ne sont pas raccordés (pas d'ajustement « back-adjusted ») : à chaque changement, l'écart de prix entre les deux échéances apparaît comme un faux rendement.
+
+**Comment le projet repère les changements** (`scripts/03` et `src/cacao/grille.py`) :
+
+1. Avant l'échéance, Yahoo reste sur le contrat qui expire alors que les échanges sont déjà passés au suivant : le volume s'effondre. Un passage est repéré quand le volume repasse au-dessus de 1 000 contrats après 3 séances sous 100.
+2. Le jour du saut est celui du plus grand rendement absolu entre ce jour et le lendemain.
+3. **Traitement :** pas de série corrigée publiée. Les modèles sont jugés aussi en **lecture de contrôle** : fenêtres sans passage jusqu'à 20 séances, rendement du jour de saut mis à zéro à 60 et 120 séances.
+
+**Limite :** ce repérage se fait après coup (il utilise le volume et le rendement du lendemain). Il ne sert qu'à l'évaluation, jamais comme variable.
+
+```{python}
+cr = lire("ccf_resume.csv")
+n_sauts = int(d["saut_echeance"].sum())
+tuiles([(str(n_sauts), "passages d'échéance repérés depuis 2005"), (f"{cr.loc[cr['seuil_pct'] == 5, 'n_extremes'].iloc[0]}", "séances à plus de 5 % de variation"),
+        (f"{cr.loc[cr['seuil_pct'] == 5, 'part_saut'].iloc[0]:.0%}", "de ces séances sont des jours de passage"),
+        (f"{cr.loc[cr['seuil_pct'] == 10, 'part_saut'].iloc[0]:.0%}", "des séances à plus de 10 %")])
+```
+
+**Comparaison avec les contrats individuels.** Yahoo ne conserve que les contrats **encore cotés** : aucun contrat expiré n'est disponible, ce qui empêche de reconstruire une série historique propre. Aucune série corrigée n'est donc fabriquée. Les trois contrats actifs (décembre 2026, mars et mai 2027) permettent toutefois de vérifier le dernier passage.
+
+```{python}
+c = lire("ccf_contrats.csv").rename(columns={"Unnamed: 0": "date"}).assign(date=lambda x: pd.to_datetime(x["date"])).set_index("date").loc["2026-06-01":]
+fig = go.Figure()
+for k, (col, nom) in enumerate((("CC=F", "CC=F (Yahoo)"), ("CCZ26", "Contrat décembre 2026"), ("CCH27", "Contrat mars 2027"))):
+    if col in c:
+        fig.add_scatter(x=c.index, y=c[col], mode="lines", name=nom, line=dict(width=2 if k == 0 else 1.5, color=SERIE[k], dash=None if k == 0 else "dot"),
+                        hovertemplate=f"{nom} : %{{y:,.0f}} $/t<extra></extra>")
+bascule = c.index[c["contrat_suivi"].eq("CCZ26")].min()
+fig.add_vline(x=bascule, line=dict(color=MUET, dash="dash"))
+fig.add_annotation(x=bascule, y=1, yref="paper", text=f"CC=F suit décembre à partir du {bascule:%d/%m/%Y}", showarrow=False, xanchor="left", font=dict(color=ENCRE_2, size=11))
+fig.update_layout(title="CC=F et les contrats individuels encore cotés, depuis juin 2026", height=380, hovermode="x unified", yaxis_title="$/t")
+fig.show()
+```
+
+- Jusqu'au 15 septembre 2026, CC=F suit le contrat de septembre, absent de Yahoo, **sous** le contrat de décembre. L'écart se referme à l'approche de l'échéance.
+- CC=F devient identique au contrat de décembre le **16 septembre 2026**. Le repérage par le volume avait daté ce passage du **15 septembre** : un jour d'écart. C'est le seul passage vérifiable avec des contrats individuels.
+- L'écart entre mars 2027 et décembre 2026 va de −3,1 % à +2,4 % selon les jours : c'est l'ordre de grandeur du faux rendement au prochain passage, dans le marché actuel.
+
+```{python}
+rd = pd.read_parquet(RACINE / "outputs" / "metriques" / "ccf_rendements.parquet")
+fig = go.Figure()
+x = rd["r_brut"].dropna() * 100
+fig.add_histogram(x=x[~rd.loc[x.index, "saut"]], name="Séances ordinaires", marker_color=SERIE[0], xbins=dict(size=0.5), opacity=0.85)
+fig.add_histogram(x=x[rd.loc[x.index, "saut"]], name="Jours de passage d'échéance", marker_color=SERIE[1], xbins=dict(size=0.5), opacity=0.95)
+fig.update_layout(title="Distribution des rendements quotidiens de CC=F (%), échelle logarithmique", barmode="overlay", height=360,
+                  yaxis=dict(type="log", title="Nombre de séances"), xaxis=dict(title="Rendement quotidien (%)", range=[-20, 20]))
+fig.show()
+```
+
+Les jours de passage (106 séances, 2 % du total) pèsent beaucoup dans les queues : ils représentent 10 % des séances à plus de 5 % de variation et 20 % de celles à plus de 10 %.
+
+```{python}
+fig = go.Figure()
+fig.add_scatter(x=d.index, y=d["cacao_close"], mode="lines", name="CC=F brut", line=dict(width=1.6, color=SERIE[0]),
+                hovertemplate="Brut : %{y:,.0f}<extra></extra>")
+fig.add_scatter(x=rd.index, y=rd["prix_neutre"], mode="lines", name="Rendements des jours de saut mis à zéro", line=dict(width=1.6, color=SERIE[1], dash="dot"),
+                hovertemplate="Sans sauts : %{y:,.0f}<extra></extra>")
+fig.update_layout(title="Prix brut et prix reconstruit sans les sauts d'échéance (indicatif)", height=380, yaxis=dict(type="log", title="$/t (échelle log)"),
+                  hovermode="x unified")
+fig.show()
+```
+
+La série sans sauts **dérive** du prix réel au fil des passages. Elle est donc utile pour mesurer des rendements, pas comme niveau de prix. Face au prix mensuel de la Banque mondiale (ICCO), CC=F brut est d'ailleurs plus proche (corrélation 0,993) que la version sans sauts (0,935). C'est pourquoi le projet garde CC=F brut comme référence et teste la robustesse en lecture de contrôle.
+
+**Les artefacts dégradent-ils les prévisions ?**
+
+```{python}
+cq = lire("ccf_consequences.csv")
+v = cq.pivot(index="horizon", columns="serie", values=["vol_moyenne", "rmse_persistance", "rmse_har"]).round(3)
+v.columns = [f"{a} ({b})" for a, b in v.columns]
+v = v.rename(columns=lambda s: s.replace("vol_moyenne", "Volatilité moyenne").replace("rmse_persistance", "Erreur persistance").replace("rmse_har", "Erreur HAR").replace("sans_sauts", "sans sauts"))
+tableau(v.reset_index().rename(columns={"horizon": "Horizon (séances)"}))
+```
+
+- **Volatilité :** les sauts gonflent la volatilité mesurée d'environ 0,01 (1 point) et l'erreur de prévision d'environ 10 %. Mais le classement ne change pas : le HAR bat la persistance avec ou sans sauts.
+- **Sens du prix :** les résultats du modèle principal sont donnés dans les deux lectures, brute et de contrôle (page [Résultats](resultats.qmd)). Aucun modèle ne bat le benchmark dans l'une ou l'autre. Les artefacts de CC=F n'expliquent donc pas l'absence de signal.
 
 ## La pluie en Côte d'Ivoire et au Ghana
 
@@ -101,6 +383,81 @@ fig.show()
 - Le début de 2026 est très au-dessus de la normale, entre +3 et +4,7 écarts-types. Attention toutefois : de décembre à mars, c'est la saison sèche. Les pluies normales y sont faibles, donc quelques averses suffisent à produire un écart important.
 - **Ce que le projet en conclut :** ces écarts de pluie n'ont pas amélioré la prévision du prix (page [Résultats](resultats.qmd)). Soit l'information est déjà intégrée par le marché quand elle est publiée, soit l'effet sur la récolte est trop indirect pour être capté.
 
+### Pluie en millimètres et saisons
+
+Un écart-type ne dit pas combien il a plu. Les graphiques ci-dessous donnent la pluie mensuelle réelle dans les zones de cacao (CHIRPS, points pondérés par la carte des cultures), comparée à sa normale.
+
+```{python}
+pm = lire("pluie_mensuelle_pays.csv").assign(mois=lambda x: pd.to_datetime(x["mois"]))
+clim = pm[(pm["mois"].dt.year >= 1991) & (pm["mois"].dt.year <= 2020)].groupby(["pays", pm["mois"].dt.month])["pluie_mm"].mean().unstack(0)
+noms_mois = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."]
+fig = go.Figure()
+for k, (p, nom) in enumerate((("CIV", "Côte d'Ivoire"), ("GHA", "Ghana"))):
+    fig.add_bar(x=noms_mois, y=clim[p], name=nom, marker_color=SERIE[k], hovertemplate=f"{nom}<br>%{{x}} : %{{y:.0f}} mm<extra></extra>")
+for x0, x1, txt in ((-0.5, 1.5, "Grande saison sèche"), (1.5, 5.5, "Grande saison des pluies"), (5.5, 7.5, "Petite saison sèche"),
+                    (7.5, 9.5, "Petite saison des pluies"), (9.5, 11.5, "Grande saison sèche")):
+    fig.add_vrect(x0=x0, x1=x1, fillcolor=SERIE[0] if "pluies" in txt else SERIE[3], opacity=0.06, line_width=0)
+    fig.add_annotation(x=(x0 + x1) / 2, y=1.04, yref="paper", text=txt, showarrow=False, font=dict(size=10, color=ENCRE_2))
+fig.update_layout(title="Pluie mensuelle normale dans les zones de cacao, 1991-2020 (mm)", barmode="group", bargap=0.25, height=380,
+                  yaxis_title="mm par mois", margin=dict(t=80))
+fig.show()
+```
+
+Les saisons sont **déduites de cette climatologie** : grande saison des pluies de mars à juin (maximum en juin, plus de 200 mm), petite saison sèche en juillet-août, petite saison des pluies en septembre-octobre, grande saison sèche de novembre à février (moins de 60 mm par mois en décembre-février). Les deux pays ont le même rythme, le Ghana un peu plus contrasté.
+
+```{python}
+from plotly.subplots import make_subplots
+fig = make_subplots(rows=2, cols=1, shared_xaxes=True, subplot_titles=("Côte d'Ivoire", "Ghana"), vertical_spacing=0.1)
+for i, p in enumerate(("CIV", "GHA"), start=1):
+    x = pm[(pm["pays"] == p) & (pm["mois"] >= "2021-01-01")]
+    fig.add_bar(x=x["mois"], y=x["pluie_mm"], name="Pluie observée", marker_color=SERIE[0], showlegend=i == 1, row=i, col=1,
+                customdata=np.stack([x["normale_1991_2020_mm"], x["anomalie_ecarts_types"], x["saison"]], axis=1),
+                hovertemplate="%{x|%m/%Y}<br>Observé : %{y:.0f} mm<br>Normale : %{customdata[0]:.0f} mm<br>Écart : %{customdata[1]:+.1f} écart-type<br>%{customdata[2]}<extra></extra>")
+    fig.add_scatter(x=x["mois"], y=x["normale_1991_2020_mm"], mode="lines", name="Normale 1991-2020", line=dict(color=SERIE[1], width=2),
+                    showlegend=i == 1, row=i, col=1, hoverinfo="skip")
+fig.update_layout(title="Pluie mensuelle observée et normale depuis 2021 (mm)", height=520, hovermode="x unified")
+fig.update_yaxes(title_text="mm")
+fig.show()
+```
+
+Survolez un mois pour voir la pluie observée, la normale, l'écart en écarts-types et la saison. Les écarts-types des modèles utilisent la normale **1991-2004**, antérieure à l'échantillon, pour qu'aucune information future n'y entre. Le graphique affiche la normale 1991-2020, la référence climatologique usuelle, plus parlante.
+
+### Du climat au marché : quels délais ?
+
+La chaîne supposée est longue. À chaque maillon, le tableau indique ce que le projet a pu mesurer.
+
+| Étape | Délai supposé | Ce que le projet a mesuré |
+|---|---|---|
+| 1. Conditions climatiques | Observées au jour près ; publiées de 3 jours (NASA) à 3-4 semaines (CHIRPS) | Données collectées, contrôlées entre 3 sources |
+| 2. Développement des cultures | Plusieurs mois entre floraison et récolte (délai agronomique non chiffré ici) | Non mesuré : pas de données de floraison ou de cabosses |
+| 3. Rendements | Saison suivante | Rendement FAOSTAT inutilisable, estimé par la FAO (page [Météo et production](impact.qmd)) |
+| 4. Production | Campagne d'octobre à septembre | Pas d'effet démontré de la pluie annuelle (p = 0,16) |
+| 5. Offre mondiale | Connue par les estimations de marché, puis par FAOSTAT à N+2 | Production FAOSTAT : information trop tardive pour le marché |
+| 6. Réaction du marché | Dès que l'information est anticipée | Pas d'amélioration des prévisions hors échantillon |
+
+Pour chercher un **délai** entre la pluie et le prix, on mesure la corrélation entre l'écart de pluie sur 3 mois, au moment où il est publié, et le rendement du cacao sur les 3 mois qui commencent 0 à 12 mois plus tard.
+
+```{python}
+dl = lire("climat_delais.csv")
+fig = go.Figure()
+for k, (p, nom) in enumerate((("CIV", "Côte d'Ivoire"), ("GHA", "Ghana"))):
+    x = dl[dl["pays"] == p]
+    fig.add_scatter(x=x["delai_mois"] + (k - 0.5) * 0.18, y=x["rho"], mode="markers", name=nom, marker=dict(size=9, color=SERIE[k], line=dict(width=2, color="white")),
+                    error_y=dict(type="data", symmetric=False, array=x["ic_haut"] - x["rho"], arrayminus=x["rho"] - x["ic_bas"], color=SERIE[k], thickness=2, width=3),
+                    customdata=np.stack([x["delai_mois"], x["ic_bas"], x["ic_haut"]], axis=1),
+                    hovertemplate=f"{nom}<br>Délai %{{customdata[0]}} mois<br>Corrélation %{{y:+.2f}}<br>IC 95 % : %{{customdata[1]:+.2f}} à %{{customdata[2]:+.2f}}<extra></extra>")
+fig.add_hline(y=0, line=dict(color=MUET, dash="dot"))
+fig.update_layout(title="Pluie publiée et rendement du cacao 3 mois plus tard, selon le délai (corrélation de rang)", height=380,
+                  xaxis=dict(title="Délai entre la publication de la pluie et le début de la fenêtre de rendement (mois)", dtick=1),
+                  yaxis_title="Corrélation")
+fig.show()
+```
+
+- Les corrélations sont faibles (−0,07 à +0,19) et presque toutes compatibles avec zéro.
+- Une seule sur 26 a un intervalle qui exclut zéro : le Ghana à 12 mois (+0,17). Avec 26 essais, une telle exception est attendue par hasard, et elle ne survit pas à une correction des tests multiples.
+- Les corrélations deviennent un peu positives à 10-12 mois : davantage de pluie irait avec une hausse du prix un an plus tard, ce qui est l'inverse de l'intuition « plus de pluie, plus d'offre ». C'est une **piste**, pas un résultat. Une hypothèse serait l'excès d'humidité et les maladies.
+- **Conclusion :** aucun délai climatique ne ressort comme exploitable pour prévoir le prix avec ces données. C'est cohérent avec les résultats du modèle.
+
 ## El Niño
 
 **De quoi il s'agit.** El Niño est un réchauffement périodique de l'océan Pacifique tropical, qui revient tous les 2 à 7 ans environ. Il dérègle la météo de nombreuses régions. Il est souvent associé à une saison sèche plus marquée en Afrique de l'Ouest. **La Niña** est le phénomène inverse : un refroidissement du Pacifique.
@@ -128,7 +485,49 @@ fig.show()
 
 **Ce que le projet en conclut :** comme pour la pluie, l'indice El Niño n'a pas permis de mieux prévoir le prix. Les épisodes sont annoncés des mois à l'avance par les agences météo : le marché les anticipe probablement.
 
-## Inventaire des données
+## Contrôle qualité des données
+
+**Nomenclature des statuts :**
+
+- **COMPLET** : toutes les observations attendues sont présentes.
+- **EXCÉDENTAIRE** : davantage d'observations que prévu.
+- **INCOMPLET** : des observations manquent.
+- **NON APPLICABLE** : source non interrogée ou période non concernée.
+
+**Une donnée manquante n'est pas forcément une erreur** : jours sans fichier dans GDELT, séries qui commencent plus tard, pays sans indice GPR.
+
+```{python}
+q = qual.copy()
+q["completude"] = (q["completude"] * 100).round(1).astype(str) + " %"
+q["famille"] = q["famille"].map(FAMILLES)
+tableau(q[["famille", "source", "attendu", "recu", "valide", "manquant", "completude", "derniere_recuperation", "derniere_date_couverte", "statut", "note"]].rename(columns={
+    "famille": "Famille", "source": "Source", "attendu": "Attendu", "recu": "Reçu", "valide": "Valide", "manquant": "Manquant", "completude": "Complétude",
+    "derniere_recuperation": "Récupérée le", "derniere_date_couverte": "Couvre jusqu'au", "statut": "Statut", "note": "Note"}))
+```
+
+Ces chiffres sont calculés par `scripts/45_dictionnaire_qualite.py` à partir des fichiers bruts. Les jours absents des événements GDELT correspondent à des fichiers manquants dans l'archive publique elle-même, pas à un échec de collecte. Les 2 points CHIRPS indonésiens sans donnée sont comptés présents, car leurs fichiers existent mais sont vides.
+
+**Contrôles automatiques sur les 328 colonnes du dataset :**
+
+```{python}
+decl = dico.set_index("variable")["frequence_native"].str.extract(r"^(\w+)")[0]
+obs = ctrl.set_index("variable")["frequence_observee"]
+coherent = (decl.str.lower() == obs.str.lower()).reindex(ctrl["variable"]).to_numpy()
+evt = decl.reindex(ctrl["variable"]).isin(["Événementielle"]).to_numpy()
+lignes = [("Dates en double dans le dataset", int(d.index.duplicated().sum()), "Aucune"),
+          ("Colonnes avec des valeurs extrêmes (plus de 8 écarts absolus médians)", int((ctrl["valeurs_extremes_8mad"] > 0).sum()),
+           "À examiner, pas forcément des erreurs : surtout les feux (saison sèche très marquée), les dévaluations du naira, la crise de 2024"),
+          ("Colonnes avec un trou de plus de 20 séances dans leur période", int((ctrl["plus_long_trou_seances"] > 20).sum()),
+           "Les colonnes GEFS : janvier 2020 à janvier 2021 écartés (ancien modèle, puis 3 mois de correction)"),
+          ("Colonnes dont la fréquence observée diffère de la fréquence déclarée", int((~coherent & ~evt).sum()),
+           "Souvent une série mensuelle lissée ou une moyenne glissante qui change chaque jour"),
+          ("Colonnes constantes", int(ctrl["constante"].fillna(False).sum()), "Indicateurs sans événement sur la période")]
+tableau(pd.DataFrame(lignes, columns=["Contrôle", "Colonnes concernées", "Lecture"]))
+```
+
+Le détail par colonne (période, complétude, plus long trou, valeurs extrêmes, fréquence observée) est dans le [dictionnaire des variables](dictionnaire.qmd).
+
+### Inventaire des fichiers
 
 Le script `scripts/34_inventaire_donnees.py` vérifie que chaque fichier attendu est présent et complet.
 
