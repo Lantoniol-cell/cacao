@@ -24,13 +24,15 @@ FAMILLES = {"climat": "Climat", "geopolitique": "Géopolitique", "biodiversite":
 
 pio.templates["cacao"] = go.layout.Template(layout=go.Layout(
     font=dict(family='system-ui, -apple-system, "Segoe UI", sans-serif', size=13, color=ENCRE_2),
-    title=dict(font=dict(size=16, color=ENCRE), x=0, xanchor="left"),
+    # Titre en haut, legende juste au-dessus du graphique : une marge haute de 100 px laisse
+    # la place a une legende sur deux lignes sans chevaucher le titre.
+    title=dict(font=dict(size=16, color=ENCRE), x=0, xanchor="left", y=0.98, yanchor="top"),
     paper_bgcolor=SURFACE, plot_bgcolor=SURFACE, colorway=SERIE, separators=", ",
     xaxis=dict(gridcolor=GRILLE, linecolor=AXE, zerolinecolor=AXE, tickfont=dict(color=MUET)),
     yaxis=dict(gridcolor=GRILLE, linecolor=AXE, zerolinecolor=AXE, tickfont=dict(color=MUET)),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0, title_text=""),
     hoverlabel=dict(bgcolor="white", font_color=ENCRE, bordercolor=AXE),
-    margin=dict(l=60, r=20, t=70, b=50)))
+    margin=dict(l=60, r=20, t=100, b=50)))
 pio.templates.default = "cacao"
 
 
