@@ -5,7 +5,8 @@ Etapes :
 2. indicateurs du jour (data/live/indicateurs.json et indicateurs_historique.parquet) :
    HAR a 5 et 20 seances, ecarts aux MM60 et MM120, regime de volatilite ;
 3. actualites Google News (data/live/actualites.json) ;
-4. rendu du site Quarto, sauf avec --sans-rendu.
+4. rendu du site Quarto dans docs/, sauf avec --sans-rendu ;
+5. envoi du seul dossier docs/ sur GitHub, sauf avec --sans-envoi (voir publier_docs).
 Chaque execution ajoute une ligne a data/live/journal.csv.
 
 Usage : PYTHONPATH=src .venv/Scripts/python.exe scripts/40_actualiser_marche.py [--sans-rendu]
@@ -28,6 +29,7 @@ from cacao.marche import avertissements, mettre_a_jour, resume  # noqa: E402
 
 LIVE = ROOT / "data/live"
 QUARTO = Path(os.environ.get("LOCALAPPDATA", "")) / "Programs/Positron/resources/app/quarto/bin/quarto.exe"
+GIT = Path(r"C:\Program Files\Git\cmd\git.exe")
 
 
 def journal(etat: str, detail: str) -> None:
@@ -69,7 +71,38 @@ def main() -> None:
         if res.returncode != 0:
             raise RuntimeError("Rendu Quarto en echec : " + res.stderr[-500:])
         print("Site rendu dans docs/", flush=True)
-    journal("ok", f"cours {r['date'].date()} ; {ajout} seances ajoutees ; {len(articles)} actualites")
+    envoi = publier_docs() if "--sans-envoi" not in sys.argv and "--sans-rendu" not in sys.argv else "non demande"
+    print(f"Envoi GitHub : {envoi}", flush=True)
+    journal("ok", f"cours {r['date'].date()} ; {ajout} seances ajoutees ; {len(articles)} actualites ; envoi : {envoi}")
+
+
+def git(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run([str(GIT), *args], cwd=ROOT, capture_output=True, text=True, env=os.environ | {"GIT_TERMINAL_PROMPT": "0"})
+
+
+def publier_docs() -> str:
+    """Envoie sur GitHub le seul dossier docs/ (accord de l'utilisatrice le 2026-11-08).
+
+    Regle de securite : rien d'autre que docs/ ne part sans controle. On commite uniquement
+    docs/, puis on verifie que tous les commits en attente d'envoi ne touchent que docs/.
+    Sinon, l'envoi est annule et note dans le journal.
+    """
+    if not GIT.exists():
+        return "git introuvable"
+    git("add", "docs")
+    if git("diff", "--cached", "--quiet", "--", "docs").returncode != 0:
+        res = git("commit", "-m", f"Actualisation quotidienne du site ({datetime.now():%Y-%m-%d})", "--", "docs")
+        if res.returncode != 0:
+            return "echec du commit : " + res.stderr.strip()[:150]
+    git("fetch", "--quiet", "origin")
+    fichiers = git("diff", "--name-only", "origin/main..HEAD").stdout.split()
+    if not fichiers:
+        return "rien de nouveau"
+    hors_docs = [f for f in fichiers if not f.startswith("docs/")]
+    if hors_docs:
+        return f"annule : commits en attente hors de docs/ ({', '.join(hors_docs[:3])})"
+    res = git("push", "origin", "main")
+    return "envoye" if res.returncode == 0 else "echec : " + res.stderr.strip()[:150]
 
 
 if __name__ == "__main__":
