@@ -191,6 +191,12 @@ if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.M
 <span class="menu-text">Méthode et limites</span></a>
   </li>  
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://lantoniol-cell.github.io/cacao/en/"> 
+<span class="menu-text">English</span></a>
+  </li>  
+</ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
@@ -549,6 +555,15 @@ if (outputEl) {{
 </section>
 
 </main> <!-- /main -->
+<script>
+// Bouton de langue : pointe vers la meme page dans la version anglaise (dossier en/).
+(function () {
+  var page = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('a.nav-link').forEach(function (a) {
+    if (a.textContent.trim() === 'English') { a.href = 'en/' + page + location.hash; a.setAttribute('hreflang', 'en'); }
+  });
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
